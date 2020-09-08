@@ -1,26 +1,54 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import InputPage from './components/startPage'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import NewBranchEntry from './components/Popups/NewBranchEntry';
+//import { connect } from 'react-redux';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+
+
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <BrowserRouter>
+          <Switch>
+            <Route path="/ngroup">
+              <NewBranchEntry branch={"Group"} />
+            </Route>
+            <Route path="/ntarget">
+              <NewBranchEntry branch={"Target"} />
+            </Route>
+            <Route path="/newGrEntry" render={() => <InputPage />} />  {/*Azonnali frissítés miatt kell így leírni*/}
+            <Route path="/">
+              <InputPage />
+            </Route>
+          </Switch>
+        </BrowserRouter>
+      </div>
+    );
+  }
 }
 
-export default App;
+
+// function getParam(){
+//   const uj = window.location.search.substr(1)
+//   const retUj = uj.split('=')
+//   const newArr = []
+//   newArr.push(decodeURI(retUj[1]))
+
+//   console.log('state groups: ',newArr);
+//   return newArr
+// }
+
+// function mapStateToProps(state) {
+
+//   return {
+//     Groups: state.Groups
+//   }
+// }
+
+//export default connect(mapStateToProps)(App);
+
+export default App

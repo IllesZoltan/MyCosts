@@ -10,6 +10,13 @@ class Clock extends Component {
     }
   }
 
+  dayName(){
+    const dayNames = ["Vasárnap", "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat"];
+    const newDate = new Date();
+    const newDayName = dayNames[newDate.getDay()]
+    return newDayName
+  }
+
   dateDisplay() {
     const mnthArr = ['JAN', 'FEB', 'MÁRC', 'ÁPR', 'MÁJ', 'JÚN', 'JÚL', 'AUG', 'SZEP', 'OKT', 'NOV', 'DEC']
     const d = new Date()
@@ -17,17 +24,18 @@ class Clock extends Component {
     return newDate
   }
 
-  correct(str){
+  correct(str) {
     let retStr = ""
-    str < 10 ? retStr = '0'+str : retStr = str+""
+    str < 10 ? retStr = '0' + str : retStr = str + ""
     return retStr
   }
 
   render() {
-    const {clock} = this.state
+    const { clock } = this.state
     const separator = ':'
     return (
       <div className="date-data">
+        <div>{this.dayName()}</div>
         <div>{this.dateDisplay()}</div>
         <div className="show-clock">
           <div>{this.correct(clock.getHours())}</div>
@@ -45,7 +53,7 @@ class Clock extends Component {
       this.setState({
         clock: new Date()
       })
-    },1000)
+    }, 1000)
   }
 }
 

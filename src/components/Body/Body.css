@@ -3,6 +3,55 @@ img{
     width: 100%;
 }
 
+
+.loader {
+    text-align: center;
+    width: 300px;
+    height: 200px;
+    margin-top: 25%;
+    background-color:rgb(161, 206, 206);
+    border: 3px solid rgb(185, 233, 229);
+    border-radius: 10px;
+}
+
+textarea {
+    width: 90%;
+    height: 100px;
+    margin-top: 10px;
+    color: rgb(0, 0, 0);
+    background: transparent;
+    border: transparent;
+    font-size: 18px;
+    text-align: center;
+}
+
+.btn-line {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.load-btn-cont{
+    text-decoration: none;
+}
+
+.load-btn {
+    width: 250px;
+    height: 40px;
+    padding-top: 5px;
+    color: whitesmoke;
+    background-color: rgb(65, 116, 116);
+    border-radius: 10px;
+    font-size: 25px;
+}
+.load-btn:hover{
+    background-color: rgb(87, 145, 145);
+
+}
+
+
+
 .body-titleline{
     margin-top: 40px;
     margin-left: 20px;

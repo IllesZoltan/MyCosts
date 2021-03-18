@@ -13,7 +13,7 @@ class Body extends Component {
     render() {
         return (
             <div className="body-container">
-                <Infoline />
+                {/*<Infoline />*/}
                 <div className="body-titleline">
                     <h3>Költség vezetés</h3>
                 </div>

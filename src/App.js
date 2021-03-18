@@ -3,6 +3,7 @@ import './App.css';
 import InputPage from './components/startPage'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import NewBranchEntry from './components/Popups/NewBranchEntry';
+import ItemLoader from './components/Body/ItemLoader';
 //import { connect } from 'react-redux';
 
 
@@ -14,15 +15,13 @@ class App extends Component {
       <div className="App">
         <BrowserRouter>
           <Switch>
-            <Route path="/ngroup">
-              <NewBranchEntry branch={"Group"} />
-            </Route>
-            <Route path="/ntarget">
-              <NewBranchEntry branch={"Target"} />
-            </Route>
+            <Route path="/loaded_items" render = {() => <InputPage />} />
+            <Route path="/ngroup"><NewBranchEntry /> </Route>
+            <Route path="/ntarget"><NewBranchEntry /></Route>
             <Route path="/newGrEntry" render={() => <InputPage />} />  {/*Azonnali frissítés miatt kell így leírni*/}
             <Route path="/">
-              <InputPage />
+              <ItemLoader />
+              
             </Route>
           </Switch>
         </BrowserRouter>

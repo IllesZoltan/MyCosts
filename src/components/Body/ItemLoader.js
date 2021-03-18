@@ -173,8 +173,8 @@ class ItemLoader extends Component {
                     <textarea type="text" value={this.infoText()} readOnly />
                 </div>
                 <div className="btn-line">
-                    <Link to="/loaded_items">
-                        <div className="load-btn" onClick={() => this.downloadList()}>OK</div>
+                    <Link to="/loaded_items" className ="load-btn-cont">
+                        <div className="load-btn" onClick={() => this.downloadList()}>Load</div>
                     </Link>
                 </div>
             </div>

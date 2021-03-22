@@ -149,13 +149,13 @@ class ItemLoader extends Component {
 
 
     componentDidMount() {
-        if (this.props.load_all === 'all' || this.props.item_to_load === 'group' || this.props.item_to_load === 'new-group' || this.props.item_to_load === 'del-grp' || this.props.item_to_load === 'edit-grp') {
+        if (this.props.load_all === 'all' || this.props.item_to_load === 'groups' || this.props.item_to_load === 'new-group' || this.props.item_to_load === 'del-grp' || this.props.item_to_load === 'edit-grp') {
             this.getGroups();
         }
-        if (this.props.load_all === 'all' || this.props.item_to_load === 'target' || this.props.item_to_load === 'new-target' || this.props.item_to_load === 'del-target' || this.props.item_to_load === 'edit-target') {
+        if (this.props.load_all === 'all' || this.props.item_to_load === 'targets' || this.props.item_to_load === 'new-target' || this.props.item_to_load === 'del-target' || this.props.item_to_load === 'edit-target') {
             this.getTargets();
         }
-        if (this.props.item_to_load === 'data' || this.props.item_to_load === 'new-data') {
+        if (this.props.item_to_load === 'datas' || this.props.item_to_load === 'new-data') {
             this.getData();
         }
     }

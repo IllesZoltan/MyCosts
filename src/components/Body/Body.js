@@ -1,15 +1,18 @@
 import React, { Component } from 'react'
 import './Body.css'
-import Infoline from './Infoline/Infoline'
-import { connect } from 'react-redux'
+//import Infoline from './Infoline/Infoline'
+//import { connect } from 'react-redux'
+import GroupSection from './body_items/GroupSection'
+import TargetSection from './body_items/TargetSection'
+import DataSection from './body_items/DataSection'
 
 
 
-class Body extends Component {
-    constructor(props) {
-        super(props)
-        this.props = props
-    }
+export default class Body extends Component {
+    // constructor(props) {
+    //     super(props)
+    //     this.props = props
+    // }
     render() {
         return (
             <div className="body-container">
@@ -18,7 +21,11 @@ class Body extends Component {
                     <h3>Költség vezetés</h3>
                 </div>
                 <div className="cost-controller">
-                    <div className="groups">
+                    <GroupSection />
+                    <TargetSection />
+                    <DataSection />
+
+                    {/* <div className="groups">
                         <div className="section-title">
                             <div className="s-title">Csoport</div>
                             <div className="cost-cont-btn">
@@ -35,8 +42,10 @@ class Body extends Component {
                             }
 
                         </div>
-                    </div>
-                    <div className="targets">
+                    </div> */}
+
+
+                    {/* <div className="targets">
                         <div className="section-title">
                             <div className="s-title">Költség Cél</div>
                             <div className="cost-cont-btn">
@@ -59,7 +68,7 @@ class Body extends Component {
                             <div>Leírás</div>
                             <div>Ár</div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
@@ -67,10 +76,3 @@ class Body extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {
-        Groups: state.Groups
-    }
-}
-
-export default connect(mapStateToProps)(Body)

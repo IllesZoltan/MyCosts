@@ -1,0 +1,68 @@
+.group{
+    width: 200px;
+}
+.target{
+    width: 200px;
+}
+.data{
+    width: 400px;
+}
+
+.section-title{
+    display: inline-flex;
+    justify-content: space-between;
+    width: 95%;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-bottom: 10px;
+}
+/* .s-title{
+
+} */
+
+.data-item-label{
+    display: inline-flex;
+    justify-content: space-between;
+    width: 99%;
+    margin-top: 10px;
+    padding: 5px;
+    border-bottom: 1px solid rgb(125, 190, 190);
+}
+.data-item-label>div{
+    width: 100px;
+    font-size: 11px;
+    text-align: center;
+}
+
+
+.newItm{
+    width: 93%;
+    margin: 3px;
+    padding-left: 8px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 5px;
+    background-color: rgb(46, 70, 70);
+}
+.newItm:hover{
+    background-color: rgb(59, 87, 87);
+}
+.clear{
+    background-color: rgb(177, 71, 71);
+}
+.clear:hover{
+    background-color: rgb(206, 108, 108);
+}
+
+
+
+.cost-cont-btn{
+    display: inline-flex;
+    justify-content: space-between;
+    width: 70px;
+}
+.s-buttons{
+    width: 30px;
+    height: 30px;
+
+}

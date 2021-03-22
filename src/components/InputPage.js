@@ -4,9 +4,6 @@ import './Comps.css'
 import Body from './Body/Body'
 
 export default class InputPage extends Component {
-    // constructor(props){
-    //     super(props)        
-    // }
     render(){
         return(
             <div className="app-body">

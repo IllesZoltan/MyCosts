@@ -19,7 +19,7 @@ import { Provider } from 'react-redux';
 const initialState = {
   Groups: [],
   Targets: [],
-  item_to_load: "group"
+  item_to_load: "groups"
 }
 
 const store = createStore(reducer)

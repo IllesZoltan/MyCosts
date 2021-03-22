@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 //import { Link } from 'react-router-dom';
-import '../Body.css'
+import './Sections.css';
 
-export default class DataItems extends Component {
+class DataItems extends Component {
     render() {
         return (
             <div className="activeTargetData">
@@ -25,3 +25,11 @@ export default class DataItems extends Component {
         )
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        ...state
+    }
+}
+
+export default connect(mapStateToProps)(DataItems)

@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import './Sections.css';
 
-class TargetItems extends Component {
+class GroupItems extends Component {
     render() {
         return (
-            <div className="ActiveGroupTargets">
-                {this.props.target_elements.map((elem, idx) => {
+            <div className="group-list">
+                <div className = "newItm clear">Clear</div>
+                {this.props.Groups.map((elem, idx) => {
                     return (
                         <Link to="/item_loader" key={idx}>
-                            <div className={"newItm " + this.props.tar_additional_clName(elem, this.props.ActiveTarget)} onClick={this.props.tar_selection}>{elem}</div>
+                            <div className="newItm" /*onClick={this.props.tar_selection}*/>{elem}</div>
                         </Link>
                     )
                 })
@@ -25,4 +27,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps)(TargetItems)
+export default connect(mapStateToProps)(GroupItems)

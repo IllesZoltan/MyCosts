@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 
-class NewBranchEntry extends Component {
+class NewGroupEntry extends Component {
     constructor(props) {
         super(props)
         this.branch = props.branch
@@ -50,7 +50,7 @@ class NewBranchEntry extends Component {
                 <div className="new-input"><input id="newInput" name="newInput" placeholder={'New ' + this.branch} onChange={e => { this.handleInputChange(e) }} /></div>
                 <div className="btn-ribbon">
                     <Link to="/newGrEntry" ><div className="new-btns create" onClick={this.handleSubmit}>Create</div></Link>
-                    <Link to="/"><div className="new-btns cancel">Cancel</div></Link>
+                    <Link to="/loaded-items"><div className="new-btns cancel">Cancel</div></Link>
                 </div>
             </div>
         )
@@ -78,6 +78,6 @@ const mapStateToProps = (state) => {
 //     }
 // }
 
-export default connect(mapStateToProps)(NewBranchEntry)
+export default connect(mapStateToProps)(NewGroupEntry)
 
 //export default NewBranchEntry

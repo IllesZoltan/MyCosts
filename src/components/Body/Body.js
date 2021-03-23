@@ -1,22 +1,35 @@
 import React, { Component } from 'react'
 import './Body.css'
 //import Infoline from './Infoline/Infoline'
-//import { connect } from 'react-redux'
+import { connect } from 'react-redux'
 import GroupSection from './body_items/GroupSection'
 import TargetSection from './body_items/TargetSection'
 import DataSection from './body_items/DataSection'
+import NewGroupEntry from '../Popups/NewGroupEntry'
 
 
 
-export default class Body extends Component {
+class Body extends Component {
     // constructor(props) {
     //     super(props)
     //     this.props = props
     // }
+
+    currentPopup(){
+        let popup = undefined;
+
+        if(this.props.showPopup !== ""){
+            popup = <NewGroupEntry />
+        }
+        return popup;
+    }
+
+
     render() {
         return (
             <div className="body-container">
-                {/*<Infoline />*/}
+                {/* <Infoline /> */}
+                {this.currentPopup()}
                 <div className="body-titleline">
                     <h3>Költség vezetés</h3>
                 </div>
@@ -76,3 +89,10 @@ export default class Body extends Component {
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        ...state
+    }
+}
+
+export default connect(mapStateToProps)(Body)

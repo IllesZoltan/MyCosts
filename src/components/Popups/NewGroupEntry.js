@@ -3,54 +3,56 @@ import './Popups.css'
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
+let newInput = "/"
 
 class NewGroupEntry extends Component {
-    constructor(props) {
-        super(props)
-        this.branch = props.branch
-        this.newInput = "//"
+    // constructor(props) {
+    //     super(props)
+    //     // this.branch = props.showPopup
+    // }
+
+
+
+    handleInputChange(e) {
+        newInput = e.target.value
     }
 
-    
-
-    handleInputChange = (e) => {
-        this.newInput = e.target.value
-        console.log('new branch entry - input value: ', this.newInput);
+    handleSubmit =() => {
+        this.dispatchToState("ADD-GRP", newInput);
     }
 
-    handleSubmit = () => {
-        if(this.branch === "Group"){
-            console.log('dispatch new input: ',this.newInput);
-            this.props.dispatch({ type: "GRP", value: this.newInput });
-        }
+    hidePopup() {
+        this.dispatchToState('popup', "");
     }
 
-    componentDidMount() {
-
+    dispatchToState(type, value) {
+        this.props.dispatch({ type: type, value: value })
     }
 
-    getURL() {
-        let retValue = ""
-        if (this.branch === "Group") {
-            retValue = "/newGrEntry"/*?value="+this.state.newBranch*/
-        }
-        return retValue
-    }
+    // componentDidMount() {
+
+    // }
+
+    // getURL() {
+    //     let retValue = ""
+    //     if (this.branch === "Group") {
+    //         retValue = "/newGrEntry"/*?value="+this.state.newBranch*/
+    //     }
+    //     return retValue
+    // }
 
     // inpValue(){
     //     return document.getElementById('newInput').value
     // }
 
     render() {
-        //const urlBR = "/newGrEntry?value="+this.state.newBranch
-
         return (
             <div className="new-cont">
-                <div className="new-title">{'Enter new ' + this.branch}</div>
-                <div className="new-input"><input id="newInput" name="newInput" placeholder={'New ' + this.branch} onChange={e => { this.handleInputChange(e) }} /></div>
+                <div className="new-title">{'Enter new ' + this.props.showPopup}</div>
+                <div className="new-input"><input id="newInput" name="newInput" placeholder={'New ' + this.props.showPopup} onChange={e => { this.handleInputChange(e) }} /></div>
                 <div className="btn-ribbon">
-                    <Link to="/newGrEntry" ><div className="new-btns create" onClick={this.handleSubmit}>Create</div></Link>
-                    <Link to="/loaded-items"><div className="new-btns cancel">Cancel</div></Link>
+                    <Link to="/item_loader" ><div className="new-btns create" onClick={this.handleSubmit}>Create</div></Link>
+                    <Link to="/loaded_items"><div className="new-btns cancel" onClick={() => this.hidePopup()}>Cancel</div></Link>
                 </div>
             </div>
         )
@@ -60,24 +62,8 @@ class NewGroupEntry extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        Groups: state.Groups,
-        Targets: state.Targets
+        ...state,
     }
 }
 
-// const mapDispatchToProps = (dispatch) => {
-
-//     return {
-//         handleSubmit: (newInput, branch) => {
-//             if(branch === "Group"){
-//                 console.log('new input: ',newInput);
-//                 dispatch({ type: "GRP", value: newInput })
-//             }
-//         }
-       
-//     }
-// }
-
 export default connect(mapStateToProps)(NewGroupEntry)
-
-//export default NewBranchEntry

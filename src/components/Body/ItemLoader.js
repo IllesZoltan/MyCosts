@@ -97,11 +97,12 @@ class ItemLoader extends Component {
                 if (data[0][0] === "") {
                     if (Object.entries(data[1]).length === 0) {
                         iAlert = "Nincs letölthető csoport ...";
-                        this.stateDispatcher('popup', 'GN')
+                        this.stateDispatcher('popup', 'Group')
                     }
                 }else{
                     iAlert = data[0][0];
                 }
+                console.log('IL ',Object.values(data[1]));
                 this.setState({
                     GroupsData: data[1],
                     AllGroupNames: Object.values(data[1]),
@@ -118,7 +119,7 @@ class ItemLoader extends Component {
                 if (data[0][0] === "") {
                     if (Object.entries(data[1]).length === 0) {
                         tAlert = `Csoport: ${this.props.ActiveGroup}\n\nNincs letölthető cél ...`;
-                        this.stateDispatcher('popup', 'TN');
+                        this.stateDispatcher('popup', 'new-target-window');
                     }
                 }else{
                     tAlert = data[0][0];
@@ -149,10 +150,10 @@ class ItemLoader extends Component {
 
 
     componentDidMount() {
-        if (this.props.load_all === 'all' || this.props.item_to_load === 'groups' || this.props.item_to_load === 'new-group' || this.props.item_to_load === 'del-grp' || this.props.item_to_load === 'edit-grp') {
+        if (this.props.load_all === 'all' || this.props.item_to_load === 'group' || this.props.item_to_load === 'new-group' || this.props.item_to_load === 'del-grp' || this.props.item_to_load === 'edit-grp') {
             this.getGroups();
         }
-        if (this.props.load_all === 'all' || this.props.item_to_load === 'targets' || this.props.item_to_load === 'new-target' || this.props.item_to_load === 'del-target' || this.props.item_to_load === 'edit-target') {
+        if (this.props.load_all === 'all' || this.props.item_to_load === 'target' || this.props.item_to_load === 'new-target' || this.props.item_to_load === 'del-target' || this.props.item_to_load === 'edit-target') {
             this.getTargets();
         }
         if (this.props.item_to_load === 'datas' || this.props.item_to_load === 'new-data') {

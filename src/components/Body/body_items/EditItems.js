@@ -4,11 +4,24 @@ import { Link } from 'react-router-dom';
 import './Sections.css';
 
 class EditItems extends Component {
+
+    newEntry(type) {
+        this.dispatcher('popup', type)
+    }
+
+    editItems(type){
+        this.dispatcher('popup', type)
+    }
+
+    dispatcher(type, value) {
+        this.props.dispatch({ type: type, value: value });
+    }
+
     render() {
         return (
             <div className="cost-cont-btn">
-                <div className="s-buttons"><Link to={"n"+this.props.section}><img src="icons8-add-new-96.png" alt="New icon" /></Link></div>
-                <div className="s-buttons"><Link to={"e"+this.props.section}><img src="icons8-edit-128.png" alt="Edit icon" /></Link></div>
+                <Link to="/loaded_items"><div className="s-buttons" onClick={() => this.newEntry(this.props.sectionNew)}><img src="icons8-add-new-96.png" alt="New icon" /></div></Link>
+                <Link to="/loaded_items"><div className="s-buttons" onClick={() => {this.editItems(this.props.sectionEdit)}}><img src="icons8-edit-128.png" alt="Edit icon" /></div></Link>
             </div>
         )
     }

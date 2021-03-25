@@ -60,7 +60,7 @@ class ItemLoader extends Component {
             this.state.itemAlert === "" ? infos = `${this.props.ActiveGroup}: -${this.props.ActiveTarget}\n\n adatok betöltése ...` : infos = this.state.itemAlert
         }
         if (this.props.item_to_load === 'new-data') {
-            this.state.itemAlert === "" ? infos = `${this.props.ActiveGroup}: -${this.props.ActiveTarget}\n\n új adat mentése ...`: infos = this.state.itemAlert
+            this.state.itemAlert === "" ? infos = `${this.props.ActiveGroup}: -${this.props.ActiveTarget}\n\n új adat mentése ...` : infos = this.state.itemAlert
         }
         if (this.props.item_to_load === 'empty-input') {
             this.state.itemAlert === "" ? infos = 'Üres beviteli mező ! ...' : infos = this.state.itemAlert
@@ -93,16 +93,12 @@ class ItemLoader extends Component {
         fetch(serverURL + '/getGroupList')
             .then(response => response.json())
             .then(data => {
-                let iAlert = "";
-                if (data[0][0] === "") {
-                    if (Object.entries(data[1]).length === 0) {
-                        iAlert = "Nincs letölthető csoport ...";
-                        this.stateDispatcher('popup', 'Group')
-                    }
+                let iAlert = data[0][0];
+                if (Object.entries(data[1]).length === 0) {
+                    this.stateDispatcher('popup', 'NewGroup')
                 }else{
-                    iAlert = data[0][0];
+                    this.stateDispatcher('popup', '')
                 }
-                console.log('IL ',Object.values(data[1]));
                 this.setState({
                     GroupsData: data[1],
                     AllGroupNames: Object.values(data[1]),
@@ -121,7 +117,7 @@ class ItemLoader extends Component {
                         tAlert = `Csoport: ${this.props.ActiveGroup}\n\nNincs letölthető cél ...`;
                         this.stateDispatcher('popup', 'new-target-window');
                     }
-                }else{
+                } else {
                     tAlert = data[0][0];
                 }
                 this.setState({
@@ -137,7 +133,7 @@ class ItemLoader extends Component {
             .then(response => response.json())
             .then(data => {
                 let dAlert = "";
-                if(data.length === 0){
+                if (data.length === 0) {
                     dAlert = `${this.props.ActiveTarget}\n\nNincsenek letölthető adatok ...`;
                     this.stateDispatcher('popup', 'DN');
                 }
@@ -174,7 +170,7 @@ class ItemLoader extends Component {
                     <textarea type="text" value={this.infoText()} readOnly />
                 </div>
                 <div className="btn-line">
-                    <Link to="/loaded_items" className ="load-btn-cont">
+                    <Link to="/loaded_items" className="load-btn-cont">
                         <div className="load-btn" onClick={() => this.downloadList()}>Load</div>
                     </Link>
                 </div>

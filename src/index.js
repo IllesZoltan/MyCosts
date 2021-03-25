@@ -17,7 +17,7 @@ const serverURL = 'http://localhost:3030';
  */
 
 class Item {
-  getItem(value){
+  getItem(value) {
     const currentDate = Date.now()
     const newItem = {
       [currentDate]: value
@@ -39,43 +39,78 @@ function reducer(state = initialState, action) {
 
   switch (action.type) {
     case "GROUP_LIST-INIT":
-      
-      console.log('index gr list ',action.value);
+
+      const groupListToFetch = {
+        Glist: action.value
+      }
+      const groupListFetchingOptions = {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(groupListToFetch)
+      }
+      fetch(serverURL + '/groupListInit', groupListFetchingOptions)
+        .catch(err => console.error('Group list error: ', err));
+
       const grList = []
       grList.push(action.value)
       const groupsState = {
         ...state,
         Groups: grList
       }
-    return groupsState
+      return groupsState
 
     case "ADD-GRP":
       const grpArr = [...state.Groups]
       const nItem = new Item()
       const newGroup = nItem.getItem(action.value);
-      Object.entries(newGroup).forEach(([keys,elem]) => console.log('index new group ',keys,':',elem ));
+      Object.entries(newGroup).forEach(([keys, elem]) => console.log('index new group ', keys, ':', elem));
       grpArr.push(newGroup)
 
       const groupToFetch = {}
-      Object.entries(newGroup).forEach(([keys,values]) => {
+      Object.entries(newGroup).forEach(([keys, values]) => {
         groupToFetch.ID = keys;
         groupToFetch.name = values;
       })
-      const fetchToState = {
+      const newGroupFetchingOptions = {
         method: 'POST',
-        headers: {'Content-type': 'application/json'},
+        headers: { 'Content-type': 'application/json' },
         body: JSON.stringify(groupToFetch)
       }
 
-      fetch(serverURL+'/addNewGroup',fetchToState)
-      .catch(err => console.error('New group error: ',err))
-      
+      fetch(serverURL + '/addNewGroup', newGroupFetchingOptions)
+        .catch(err => console.error('New group error: ', err))
 
-      const newState = {
-        ...state,
-        Groups: grpArr
+
+      // const newState = {
+      //   ...state,
+      //   Groups: grpArr
+      // }
+      return state
+
+    case "EDIT-GRP":
+      const editedGroup = action.value;
+      const editGroupToFetch = { grIdx: editedGroup }
+      const editGrFetchingOptions = {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(editGroupToFetch)
       }
-      return newState
+      fetch(serverURL+'/groupEDIT',editGrFetchingOptions)
+      .catch(err => console.error('Group edit error: ',err));
+      
+      return state
+
+    case "DEL-GRP":
+      const delGroupToFetch = { Idx: action.value }
+      const delGroupFetchingOptions = {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(delGroupToFetch)
+      }
+      fetch(serverURL + '/groupDEL', delGroupFetchingOptions)
+        .catch(err => console.error('Delete group error: ', err))
+      return state
+
 
     // case "ADD-TRG":
     //   const targArr = state.Targets

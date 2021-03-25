@@ -51,7 +51,7 @@ function groupAvailability(valToCheck) {
       }
     })
   } else {
-    GRP = {}
+    GRP = undefined
   }
   return checkedOK;
 }
@@ -111,12 +111,49 @@ app.use(express.urlencoded({ extended: true }));
 
 
 
+/* 
+* Külön route kell, hogy meg lehessen tölteni a GRP-t
+*/
+app.post('/groupListInit', (req, res) => {
+  GRP = req.body.Glist;
+  alert = "";
+  res.send(GRP)
+})
+
+/*
+* Az asynchron "SELECT" miatt itt nem lehet megtölteni a GRP-t
+*/
+app.get('/getGroupList', (req, res) => {
+  const groups = {};
+  db.serialize(() => {
+    db.all(
+      'SELECT * FROM grp',
+      (err, row) => {
+        if (err) { console.log('Groups download error: ', err); }
+        row.forEach(item => {
+          groups[item.Gid] = item.Gname
+        })
+
+        if(Object.values(groups).length === 0){
+          alert = "Nincs letölthető csoport ..."
+        }else{
+          alert = ""
+        }
+        groupList = [[alert], groups]
+        res.send(groupList)
+      }
+    )
+  })
+})
+
+
+
 app.post('/addNewGroup', (req, res) => {
   const newGroup = req.body
   const isAvailable = groupAvailability(newGroup);
   if (typeof (isAvailable) === 'boolean') {
     if (!isAvailable) {
-      GRP[newGroup.ID] = newGroup.name
+      //GRP[newGroup.ID] = newGroup.name
       db.serialize(() => {
         db.run(
           `INSERT INTO grp VALUES ('${newGroup.ID}','${newGroup.name}')`,
@@ -133,7 +170,7 @@ app.post('/addNewGroup', (req, res) => {
 
 app.post('/groupEDIT', (req, res) => {
   const grEdit = req.body.grIdx;
-  GRP[grEdit.gId] = grEdit.gName;
+  //GRP[grEdit.gId] = grEdit.gName;
   db.serialize(() => {
     db.run(
       `UPDATE grp SET Gname = ${JSON.stringify(grEdit.gName)} WHERE Gid = ${grEdit.gId}`,   // JSON.stringify(grEdit.gName) = OK ; grEdit.gName = SQLITE error:no such column
@@ -147,14 +184,18 @@ app.post('/groupEDIT', (req, res) => {
 
 app.post('/groupDEL', (req, res) => {
   const grDel = req.body.Idx;
-  delete GRP[grDel.Id]
+  //delete GRP[grDel]
   db.serialize(() => {
     db.run(
-      `DELETE FROM targ WHERE Gid = ${grDel.Id}`,
-      (err) => { console.error('Target deleting error: ',err) }
+      `DELETE FROM data WHERE Gid = ${grDel}`,
+      (err) => { console.error('Group-Data deleting error: ',err) }
     )
     db.run(
-      `DELETE FROM grp WHERE Gid = ${grDel.Id}`,
+      `DELETE FROM targ WHERE Gid = ${grDel}`,
+      (err) => { console.error('Group-Target deleting error: ',err) }
+    )
+    db.run(
+      `DELETE FROM grp WHERE Gid = ${grDel}`,
       (err) => { console.error('Group deleting error: ', err) }
     )
   })
@@ -163,35 +204,6 @@ app.post('/groupDEL', (req, res) => {
 })
 
 
-/*
-* Az asynchron "SELECT" miatt itt nem lehet megtölteni a GRP-t
-*/
-
-app.get('/getGroupList', (req, res) => {
-  const groups = {};
-  db.serialize(() => {
-    db.all(
-      'SELECT * FROM grp',
-      (err, row) => {
-        if (err) { console.log('Groups download error: ', err); }
-        row.forEach(item => {
-          groups[item.Gid] = item.Gname
-        })
-        groupList = [[alert], groups]
-        res.send(groupList)
-      }
-    )
-  })
-})
-
-/* 
-* Külön route kell, hogy meg lehessen tölteni a GRP-t
-*/
-app.post('/groupListInit', (req, res) => {
-  GRP = req.body.Glist;
-  alert = "";
-  res.send(GRP)
-})
 
 app.post('/getCurrentGroup', (req, res) => {
   targetList.length = 0;

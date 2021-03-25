@@ -1,9 +1,10 @@
 .new-cont{
     position: fixed;
     width: 400px;
-    height: 200px;
+    /* height: 200px; */
     /* margin-top: 5%; */
     margin-left: 25%;
+    padding-bottom: 30px;
     color: rgb(12, 44, 44);
     font-size: 1.5em;
     font-weight: bold;
@@ -22,6 +23,19 @@
     margin-right: auto;
     text-align: center;
 }
+
+.edit-input{
+    display: inline-flex;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+.edit-btn{
+    width: 35px;
+    height: 35px;
+    margin-left: 20px;
+
+}
+
 input{
     width: 250px;
     height: 30px;

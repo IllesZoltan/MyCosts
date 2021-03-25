@@ -9,10 +9,9 @@ class GroupItems extends Component {
             <div className="group-list">
                 <div className = "newItm clear">Clear</div>
                 {this.props.Groups.map(el => Object.values(el).map((elem, idx) => {
-                    console.log('Gr items ',elem);
                     return (
                         <Link to="/item_loader" key={idx}>
-                            <div className="newItm" /*onClick={this.props.tar_selection}*/>{elem}</div>
+                            <div className="newItm">{elem}</div>
                         </Link>
                     )
                 }))

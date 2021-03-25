@@ -5,12 +5,13 @@ import './Header.css'
 class Clock extends Component {
   constructor(props) {
     super(props)
+    this.unmount = 0
     this.state = {
       clock: new Date()
     }
   }
 
-  dayName(){
+  dayName() {
     const dayNames = ["Vasárnap", "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat"];
     const newDate = new Date();
     const newDayName = dayNames[newDate.getDay()]
@@ -48,12 +49,26 @@ class Clock extends Component {
     )
   }
 
-  componentDidMount() {
-    this.myInterval = setInterval(() => {
+  stateUpdater() {
+    if (this.unmount) {
       this.setState({
         clock: new Date()
       })
+    }
+  }
+
+  componentDidMount() {
+    this.unmount = 1
+    this.myInterval = setInterval(() => {
+      this.stateUpdater()
     }, 1000)
+  }
+
+  /*
+  *The component must unmount because setInterval()
+  */
+  componentWillUnmount() {
+    this.unmount = 0
   }
 }
 

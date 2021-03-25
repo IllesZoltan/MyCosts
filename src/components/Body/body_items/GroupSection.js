@@ -9,7 +9,7 @@ export default class GroupSection extends Component {
             <div className="group">
                 <div className="section-title">
                     <div className="s-title">Csoport</div>
-                    <EditItems section = {"group"}/>
+                    <EditItems sectionNew = {"NewGroup"} sectionEdit = {"EditGroup"}/>
                 </div>
                     <GroupItems />
             </div>

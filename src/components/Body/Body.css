@@ -51,7 +51,6 @@ textarea {
 }
 
 
-
 .body-titleline{
     margin-top: 40px;
     margin-left: 20px;
@@ -73,4 +72,65 @@ textarea {
 .newGrpGrp{
     width: 100%;
     margin-top: 40px;
+}
+
+.alertWindow{
+    width: 300px;
+    height: 400px;
+    margin-top: 20%;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: black;
+    background-color: rgb(224, 249, 250);
+    border: 3px solid rgb(216, 2, 2);
+    border-radius: 10px;
+}
+.alert-cont{
+    width: 90%;
+    height: 90%;
+    margin-left: 15px;
+    margin-top: 15px;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+.alert-header{
+    height: 70%;
+    color: rgb(182, 23, 23);
+    text-align: center;
+}
+.alert-text{
+    height: 50%;
+    margin-top: 10%;
+}
+.alert-data{
+    font-weight: normal;
+}
+
+/* .btn-ribbon{
+    display: inline-flex;
+    justify-content: space-evenly;
+    width: 100%;
+    margin-top: 20px;
+    border: 1px solid black;
+}
+.only-cancel{
+    justify-content: center;
+} */
+/* .new-btns{
+    width: 100px;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding: 3px;
+    text-align: center;
+    font-size: 0.8em;
+    border-radius: 40%;
+    background-color: rgb(124, 141, 141);
+    border: 1px solid rgb(234, 243, 248);
+    box-shadow: 5px 5px 8px rgb(70, 95, 95);
+} */
+.del{
+    color: rgb(182, 23, 23);
+}
+.not-del{
+    color: rgb(56, 88, 88);
 }

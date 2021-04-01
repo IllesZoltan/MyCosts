@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import './Body.css'
-//import Infoline from './Infoline/Infoline'
+import Infoline from './Infoline/Infoline'
 import { connect } from 'react-redux'
 import GroupSection from './body_items/GroupSection'
 import TargetSection from './body_items/TargetSection'
@@ -32,7 +32,7 @@ class Body extends Component {
     render() {
         return (
             <div className="body-container">
-                {/* <Infoline /> */}
+                <Infoline />
                 {this.currentPopup()}
                 <div className="body-titleline">
                     <h3>Költség vezetés</h3>

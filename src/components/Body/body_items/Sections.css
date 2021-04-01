@@ -1,3 +1,5 @@
+
+
 .group{
     width: 200px;
 }
@@ -19,6 +21,12 @@
 /* .s-title{
 
 } */
+
+.group-item-cont{
+    height: 320px;
+    margin-top: 10px;
+    overflow-y: scroll;
+}
 
 .data-item-label{
     display: inline-flex;

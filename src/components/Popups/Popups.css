@@ -1,8 +1,22 @@
+::-webkit-scrollbar{
+    width: 8px;
+    background-color: rgb(203, 255, 255);
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb{
+    width: 6px;
+    background-color: rgb(110, 165, 165);
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover{
+    background-color: rgb(89, 124, 124);
+}
+
+
 .new-cont{
     position: fixed;
-    width: 400px;
-    /* height: 200px; */
-    /* margin-top: 5%; */
+    width: 410px;
+    margin-top: -35%;
     margin-left: 25%;
     padding-bottom: 30px;
     color: rgb(12, 44, 44);
@@ -12,6 +26,9 @@
     border-radius: 20px;
     background-color: rgb(181, 226, 226);
     z-index: 10px;
+}
+.edit-cont{
+    height: 410px;
 }
 .new-title{
     margin-top: 25px;
@@ -24,10 +41,17 @@
     text-align: center;
 }
 
+.edit-list{
+    height: 300px;
+    margin-top: 5px;
+    overflow-y: scroll;
+}
+
 .edit-input{
     display: inline-flex;
     margin-top: 20px;
     margin-left: 20px;
+
 }
 .edit-btn{
     width: 35px;
@@ -45,19 +69,20 @@ input{
 
 .btn-ribbon{
     display: inline-flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     width: 100%;
-    margin-top: 30px;
+    margin-top: 20px;
+}
+.only-cancel{
+    justify-content: center;
 }
 .new-btns{
     width: 100px;
-    margin-left: 20px;
-    margin-right: 20px;
     padding: 3px;
     text-align: center;
     font-size: 0.8em;
     border-radius: 40%;
-    background-color: rgb(124, 141, 141);
+    background-color: rgb(154, 175, 175);
     border: 1px solid rgb(234, 243, 248);
     box-shadow: 5px 5px 8px rgb(70, 95, 95);
 }

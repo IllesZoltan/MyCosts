@@ -184,6 +184,7 @@ app.post('/groupEDIT', (req, res) => {
 
 app.post('/groupDEL', (req, res) => {
   const grDel = req.body.Idx;
+  console.log('srv g del ',grDel);
   //delete GRP[grDel]
   db.serialize(() => {
     db.run(

@@ -31,7 +31,8 @@ const initialState = {
   Groups: [],
   Targets: [],
   item_to_load: "group",
-  showPopup: ""
+  showPopup: "",
+  alertState: []
 }
 
 const store = createStore(reducer)
@@ -109,7 +110,12 @@ function reducer(state = initialState, action) {
       }
       fetch(serverURL + '/groupDEL', delGroupFetchingOptions)
         .catch(err => console.error('Delete group error: ', err))
-      return state
+
+        const delGrpState = {
+          ...state,
+          alertState: []
+        }
+      return delGrpState
 
 
     // case "ADD-TRG":
@@ -129,6 +135,21 @@ function reducer(state = initialState, action) {
 
 
     default: return state
+
+    case "alert":
+      //const displayText = {}
+      const data = {}
+      const newAlert = []
+      data[action.value.key] = action.value.value
+
+      newAlert.push(data)
+
+      const newAlertState = {
+        ...state,
+        alertState: newAlert
+      }
+      return newAlertState
+      //return state
   }
 }
 

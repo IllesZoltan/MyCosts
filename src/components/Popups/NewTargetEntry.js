@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 
-class NewGroupEntry extends Component {
+class NewTargetEntry extends Component {
     constructor() {
         super();
         this.newInput = "";
@@ -24,7 +24,7 @@ class NewGroupEntry extends Component {
     }
 
     handleSubmit = () => {
-        this.dispatchToState("ADD-GRP", this.state.input);
+        this.dispatchToState("ADD-TRG", this.state.input);
     }
 
     hidePopup() {
@@ -66,4 +66,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps)(NewGroupEntry)
+export default connect(mapStateToProps)(NewTargetEntry)

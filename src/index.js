@@ -30,6 +30,7 @@ class Item {
 const initialState = {
   Groups: [],
   Targets: [],
+  ActiveGroup: "",
   item_to_load: "group",
   showPopup: "",
   alertState: []
@@ -61,11 +62,10 @@ function reducer(state = initialState, action) {
       return groupsState
 
     case "ADD-GRP":
-      const grpArr = [...state.Groups]
-      const nItem = new Item()
-      const newGroup = nItem.getItem(action.value);
-      Object.entries(newGroup).forEach(([keys, elem]) => console.log('index new group ', keys, ':', elem));
-      grpArr.push(newGroup)
+      //const grpArr = [...state.Groups]
+      const nGrItem = new Item()
+      const newGroup = nGrItem.getItem(action.value);
+      //grpArr.push(newGroup)
 
       const groupToFetch = {}
       Object.entries(newGroup).forEach(([keys, values]) => {
@@ -96,9 +96,9 @@ function reducer(state = initialState, action) {
         headers: { 'Content-type': 'application/json' },
         body: JSON.stringify(editGroupToFetch)
       }
-      fetch(serverURL+'/groupEDIT',editGrFetchingOptions)
-      .catch(err => console.error('Group edit error: ',err));
-      
+      fetch(serverURL + '/groupEDIT', editGrFetchingOptions)
+        .catch(err => console.error('Group edit error: ', err));
+
       return state
 
     case "DEL-GRP":
@@ -111,11 +111,73 @@ function reducer(state = initialState, action) {
       fetch(serverURL + '/groupDEL', delGroupFetchingOptions)
         .catch(err => console.error('Delete group error: ', err))
 
-        const delGrpState = {
-          ...state,
-          alertState: []
-        }
+      const delGrpState = {
+        ...state,
+        alertState: []
+      }
       return delGrpState
+
+    case "SEL-GRP":
+      console.log('Index sel-grp ', action.value);
+
+      const selGrp = { grID: action.value };
+      const selGrpFetchingOptions = {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(selGrp)
+      }
+      fetch(serverURL + '/getCurrentGroup', selGrpFetchingOptions)
+        .catch(err => { console.error('Selected group error: ', err) })
+
+      const selGRstate = {
+        ...state,
+        ActiveGroup: action.value.gname,
+        item_to_load: "target"
+      }
+      return selGRstate
+
+    case "TARGET_LIST-INIT":
+
+      const tarListToFetch = {
+        Tlist: action.value
+      }
+
+      const tarListFetchingOptions = {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(tarListToFetch)
+      }
+      fetch(serverURL + '/targetListInit', tarListFetchingOptions)
+        .catch(err => { console.error('Target list error: ', err) })
+
+      const tarList = [];
+      tarList.push(action.value);
+      const targetsState = {
+        ...state,
+        Targets: tarList
+      }
+
+      return targetsState
+
+    case "ADD-TRG":
+      const nTargItem = new Item();
+      const nTarg = nTargItem.getItem(action.value)
+      const newTargToFetch = {}
+      Object.entries(nTarg).forEach(([keys, values]) => {
+        newTargToFetch.ID = keys;
+        newTargToFetch.name = values;
+      });
+
+      const newTargFetchingOptions = {
+        method: "POST",
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(newTargToFetch)
+      }
+      fetch(serverURL + '/addNewTarget', newTargFetchingOptions)
+        .catch(err => { console.error('New Target error: ', err) })
+
+      return state
+
 
 
     // case "ADD-TRG":
@@ -149,7 +211,7 @@ function reducer(state = initialState, action) {
         alertState: newAlert
       }
       return newAlertState
-      //return state
+    //return state
   }
 }
 

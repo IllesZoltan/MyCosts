@@ -93,10 +93,12 @@ class ItemLoader extends Component {
         fetch(serverURL + '/getGroupList')
             .then(response => response.json())
             .then(data => {
-                let iAlert = data[0][0];
+                let iAlert = "";
                 if (Object.entries(data[1]).length === 0) {
+                    iAlert = "Nincs letölthető csoport ..."
                     this.stateDispatcher('popup', 'NewGroup')
                 }else{
+                    iAlert = data[0][0];
                     this.stateDispatcher('popup', '')
                 }
                 this.setState({
@@ -115,7 +117,7 @@ class ItemLoader extends Component {
                 if (data[0][0] === "") {
                     if (Object.entries(data[1]).length === 0) {
                         tAlert = `Csoport: ${this.props.ActiveGroup}\n\nNincs letölthető cél ...`;
-                        this.stateDispatcher('popup', 'new-target-window');
+                        this.stateDispatcher('popup', 'NewTarget');
                     }
                 } else {
                     tAlert = data[0][0];

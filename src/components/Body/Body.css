@@ -5,6 +5,7 @@ img{
 
 
 .loader {
+    position: fixed;
     width: 300px;
     height: 200px;
     margin-top: 25%;
@@ -75,6 +76,7 @@ textarea {
 }
 
 .alertWindow{
+    position: fixed;
     width: 300px;
     height: 400px;
     margin-top: 20%;

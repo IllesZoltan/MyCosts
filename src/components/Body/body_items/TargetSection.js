@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import EditItems from './EditItems';
 import './Sections.css';
+import TargetItems from './TargetItems';
 
 export default class TargetSection extends Component {
     render() {
@@ -8,9 +9,9 @@ export default class TargetSection extends Component {
             <div className="target">
                 <div className="section-title">
                     <div className="s-title">Költség Cél</div>
-                    <EditItems section = {"target"}/>
-
+                    <EditItems sectionNew = {"NewTarget"} sectionEdit = {"EditTarget"}/>
                 </div>
+                    <TargetItems />
             </div>
         )
     }

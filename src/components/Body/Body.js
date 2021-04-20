@@ -7,6 +7,7 @@ import TargetSection from './body_items/TargetSection'
 import DataSection from './body_items/DataSection'
 import NewGroupEntry from '../Popups/NewGroupEntry'
 import EditGroup from '../Popups/EditGroup'
+import NewTargetEntry from '../Popups/NewTargetEntry'
 
 
 
@@ -18,12 +19,15 @@ class Body extends Component {
 
     currentPopup(){
         let popup = undefined;
-
         if(this.props.showPopup === "NewGroup"){
             popup = <NewGroupEntry title = "Group"/>
         }
         if(this.props.showPopup === "EditGroup"){
             popup = <EditGroup title = "Group"/>
+        }
+
+        if(this.props.showPopup === "NewTarget"){
+            popup = <NewTargetEntry title = "Target" />
         }
         return popup;
     }

@@ -134,19 +134,17 @@ app.get('/getGroupList', (req, res) => {
           groups[item.Gid] = item.Gname
         })
 
-        if(Object.values(groups).length === 0){
-          alert = "Nincs letölthető csoport ..."
-        }else{
-          alert = ""
-        }
+        // if(Object.values(groups).length === 0){
+        //   alert = "Nincs letölthető csoport ..."
+        // }else{
+        //   alert = ""
+        // }
         groupList = [[alert], groups]
         res.send(groupList)
       }
     )
   })
 })
-
-
 
 app.post('/addNewGroup', (req, res) => {
   const newGroup = req.body
@@ -173,11 +171,11 @@ app.post('/groupEDIT', (req, res) => {
   //GRP[grEdit.gId] = grEdit.gName;
   db.serialize(() => {
     db.run(
-      `UPDATE grp SET Gname = ${JSON.stringify(grEdit.gName)} WHERE Gid = ${grEdit.gId}`,   // JSON.stringify(grEdit.gName) = OK ; grEdit.gName = SQLITE error:no such column
+      // JSON.stringify(grEdit.gName) = OK ; grEdit.gName = SQLITE error:no such column
+      `UPDATE grp SET Gname = ${JSON.stringify(grEdit.gName)} WHERE Gid = ${grEdit.gId}`,
       (err) => { console.error('Updating error: ', err) }
     )
   })
-
   res.send(GRP)
 })
 
@@ -200,7 +198,6 @@ app.post('/groupDEL', (req, res) => {
       (err) => { console.error('Group deleting error: ', err) }
     )
   })
-
   res.send(grDel)
 })
 
@@ -212,8 +209,11 @@ app.post('/getCurrentGroup', (req, res) => {
   res.send(currGRPid)
 })
 
-
-
+app.post('/targetListInit', (req,res) => {
+  currGRP_TRG=req.body.Tlist;
+  alert = "";
+  res.send(currGRP_TRG)
+})
 
 app.get('/getCurrentGroupTargets', (req, res) => {
   const targs = {};
@@ -234,6 +234,7 @@ app.get('/getCurrentGroupTargets', (req, res) => {
 
 app.post('/addNewTarget', (req, res) => {
   const newTarget = req.body;
+  console.log('srv new targ ',newTarget);
   const newTargObject = {}
   const tarIsAvailable = targetAvailability(newTarget);
   if (typeof (tarIsAvailable) === 'boolean') {
@@ -280,12 +281,6 @@ app.post('/getCurrentTarget', (req,res) => {
   dataList.length = 0;
   currTRGid = req.body.trID;
   res.send(currTRGid);
-})
-
-app.post('/targetListInit', (req,res) => {
-  currGRP_TRG=req.body.Tlist;
-  alert = "";
-  res.send(currGRP_TRG)
 })
 
 

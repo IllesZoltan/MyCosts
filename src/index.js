@@ -82,15 +82,17 @@ function reducer(state = initialState, action) {
         .catch(err => console.error('New group error: ', err))
 
 
-      // const newState = {
-      //   ...state,
-      //   Groups: grpArr
-      // }
-      return state
+      const addGrpState = {
+        ...state,
+        item_to_load: "group",
+        ActiveGroup: "",
+        Targets: []
+      }
+      return addGrpState
 
     case "EDIT-GRP":
       const editedGroup = action.value;
-      const editGroupToFetch = { grIdx: editedGroup }
+      const editGroupToFetch = { grEditID: editedGroup }
       const editGrFetchingOptions = {
         method: 'POST',
         headers: { 'Content-type': 'application/json' },
@@ -99,10 +101,17 @@ function reducer(state = initialState, action) {
       fetch(serverURL + '/groupEDIT', editGrFetchingOptions)
         .catch(err => console.error('Group edit error: ', err));
 
-      return state
+      const editGrpState = {
+        ...state,
+        item_to_load: "group",
+        ActiveGroup: "",
+        Targets: []
+      }
+
+      return editGrpState
 
     case "DEL-GRP":
-      const delGroupToFetch = { Idx: action.value }
+      const delGroupToFetch = { delGrID: action.value }
       const delGroupFetchingOptions = {
         method: 'POST',
         headers: { 'Content-type': 'application/json' },
@@ -113,13 +122,15 @@ function reducer(state = initialState, action) {
 
       const delGrpState = {
         ...state,
+        Targets: [],
+        ActiveGroup: "",
+        item_to_load: "group",
+        showPopup: "",
         alertState: []
       }
       return delGrpState
 
     case "SEL-GRP":
-      console.log('Index sel-grp ', action.value);
-
       const selGrp = { grID: action.value };
       const selGrpFetchingOptions = {
         method: 'POST',
@@ -137,7 +148,6 @@ function reducer(state = initialState, action) {
       return selGRstate
 
     case "TARGET_LIST-INIT":
-
       const tarListToFetch = {
         Tlist: action.value
       }
@@ -156,8 +166,26 @@ function reducer(state = initialState, action) {
         ...state,
         Targets: tarList
       }
-
       return targetsState
+
+    case "EDIT-TRG":
+      const editedTarget = action.value;
+      const editTargetToFetch = { tEditID: editedTarget }
+      const editTrgFetchingOptions = {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(editTargetToFetch)
+      }
+      fetch(serverURL + '/targEDIT', editTrgFetchingOptions)
+        .catch(err => console.error('Target edit error: ', err));
+
+      const editTargState = {
+        ...state,
+        item_to_load: "target",
+        showPopup: ""
+      }
+
+      return editTargState
 
     case "ADD-TRG":
       const nTargItem = new Item();
@@ -176,16 +204,35 @@ function reducer(state = initialState, action) {
       fetch(serverURL + '/addNewTarget', newTargFetchingOptions)
         .catch(err => { console.error('New Target error: ', err) })
 
-      return state
+      const addTrgState = {
+        ...state,
+        showPopup: ""
+      }
+
+      return addTrgState
+
+    case "DEL-TRG":
+      console.log('idx del trg ',action.value);
+
+      const delTargetToFetch = { delTrgID: action.value }
+      const delTargetFetchingOptions = {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(delTargetToFetch)
+      }
+      fetch(serverURL + '/targetDEL', delTargetFetchingOptions)
+        .catch(err => console.error('Delete group error: ', err))
+
+      const delTargState = {
+        ...state,
+        item_to_load: "target",
+        showPopup: "",
+        alertState: []
+      }
+
+    return delTargState
 
 
-
-    // case "ADD-TRG":
-    //   const targArr = state.Targets
-    //   return {
-    //     Groups: state.Groups,
-    //     Targets: targArr
-    //   }
 
 
     case "popup":
@@ -195,15 +242,12 @@ function reducer(state = initialState, action) {
       }
       return popupState
 
-
-    default: return state
-
     case "alert":
-      //const displayText = {}
       const data = {}
       const newAlert = []
       data[action.value.key] = action.value.value
-
+      
+      newAlert.push(action.value.type)
       newAlert.push(data)
 
       const newAlertState = {
@@ -211,7 +255,21 @@ function reducer(state = initialState, action) {
         alertState: newAlert
       }
       return newAlertState
-    //return state
+
+
+    case 'CLR':
+      const clearedState = {
+        ...state,
+        Targets: [],
+        ActiveGroup: "",
+        item_to_load: "group",
+        showPopup: "",
+        alertState: []
+      }
+      return clearedState
+
+
+    default: return state
   }
 }
 

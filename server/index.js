@@ -167,7 +167,7 @@ app.post('/addNewGroup', (req, res) => {
 
 
 app.post('/groupEDIT', (req, res) => {
-  const grEdit = req.body.grIdx;
+  const grEdit = req.body.grEditID;
   //GRP[grEdit.gId] = grEdit.gName;
   db.serialize(() => {
     db.run(
@@ -181,8 +181,7 @@ app.post('/groupEDIT', (req, res) => {
 
 
 app.post('/groupDEL', (req, res) => {
-  const grDel = req.body.Idx;
-  console.log('srv g del ',grDel);
+  const grDel = req.body.delGrID;
   //delete GRP[grDel]
   db.serialize(() => {
     db.run(
@@ -234,7 +233,6 @@ app.get('/getCurrentGroupTargets', (req, res) => {
 
 app.post('/addNewTarget', (req, res) => {
   const newTarget = req.body;
-  console.log('srv new targ ',newTarget);
   const newTargObject = {}
   const tarIsAvailable = targetAvailability(newTarget);
   if (typeof (tarIsAvailable) === 'boolean') {
@@ -255,11 +253,10 @@ app.post('/addNewTarget', (req, res) => {
 })
 
 app.post('/targEDIT', (req,res) => {
-  const targEditID = req.body.TeditID;
-  console.log('srv targEDIT: ',targEditID.Gid,targEditID.Tid,targEditID.Tname);
+  const targEditID = req.body.tEditID;
   db.serialize(() => {
     db.run(
-      `UPDATE targ SET Tname = ${JSON.stringify(targEditID.Tname)} WHERE Gid = ${targEditID.Gid} AND Tid = ${targEditID.Tid}`,
+      `UPDATE targ SET Tname = ${JSON.stringify(targEditID.tName)} WHERE Gid = ${currGRPid.gid} AND Tid = ${targEditID.tId}`,
       (err) => {console.error('Target updating error: ',err)}
     )
   })
@@ -267,10 +264,15 @@ app.post('/targEDIT', (req,res) => {
 })
 
 app.post('/targetDEL', (req,res) => {
-  const targetID = req.body.TdelID;
+  const targetID = req.body.delTrgID;
+  console.log('srv targetDel ',targetID);
   db.serialize(() => {
     db.run(
-      `DELETE FROM targ WHERE gid = ${targetID.Gid} AND tid = ${targetID.Tid}`,
+      `DELETE FROM data WHERE Gid = ${currGRPid.gid} AND Tid = ${targetID}`,
+      (err) => { console.error('Target-Data deleting error: ',err) }
+    )
+    db.run(
+      `DELETE FROM targ WHERE Gid = ${currGRPid.gid} AND Tid = ${targetID}`,
       (err) => {console.error('Target deleting error: ',err)}
     )
   })

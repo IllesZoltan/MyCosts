@@ -8,6 +8,7 @@ import DataSection from './body_items/DataSection'
 import NewGroupEntry from '../Popups/NewGroupEntry'
 import EditGroup from '../Popups/EditGroup'
 import NewTargetEntry from '../Popups/NewTargetEntry'
+import EditTarget from '../Popups/EditTarget'
 
 
 
@@ -28,6 +29,9 @@ class Body extends Component {
 
         if(this.props.showPopup === "NewTarget"){
             popup = <NewTargetEntry title = "Target" />
+        }
+        if(this.props.showPopup === "EditTarget"){
+            popup = <EditTarget title = "Target"/>
         }
         return popup;
     }

@@ -4,10 +4,8 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 let newInput = "";
-// let toEdit = true;
-// let selectedItem = "";
 
-class EditGroup extends Component {
+class EditTarget extends Component {
     constructor() {
         super()
         this.state = {
@@ -22,11 +20,11 @@ class EditGroup extends Component {
     }
 
     handleSubmit(key) {
-        const editedGRP = {
-            gId: key,
-            gName: newInput
+        const editedTRG = {
+            tId: key,
+            tName: newInput
         }
-        this.dispatchToState("EDIT-GRP", editedGRP);
+        this.dispatchToState("EDIT-TRG", editedTRG);
     }
 
     hidePopup() {
@@ -35,7 +33,6 @@ class EditGroup extends Component {
             selectedItem: "",
             toEdit: true
         })
-        //this.state.toEdit = true;
     }
 
     dispatchToState(type, value) {
@@ -43,17 +40,12 @@ class EditGroup extends Component {
     }
 
     showAlert(key, item) {
-        const itemID = { type: "group", key: key, value: item }
+        const itemID = { type: "target", key: key, value: item }
         this.dispatchToState('alert', itemID);
     }
 
-    // delGr(groupKey) {
-    //     this.dispatchToState('DEL-GRP', groupKey);
-    //     toEdit = true;
-    // }
-
     isSelected(idx) {
-        const nrOfItems = Object.keys(this.props.Groups[0]).length;
+        const nrOfItems = Object.keys(this.props.Targets[0]).length;
         if (this.state.toEdit) {
             for (let i = 0; i < nrOfItems; i++) {
                 if (i !== idx) {
@@ -65,7 +57,6 @@ class EditGroup extends Component {
                 selectedItem: idx,
                 toEdit: false
             })
-            // selectedItem = idx;
         }
     }
 
@@ -103,7 +94,7 @@ class EditGroup extends Component {
             <div className="new-cont edit-cont">
                 <div className="new-title">{'Edit ' + this.props.title}</div>
                 <div className="edit-list">
-                    {this.props.Groups.map(el => Object.entries(el).map(([keys, elem], idx) => {
+                    {this.props.Targets.map(el => Object.entries(el).map(([keys, elem], idx) => {
                         return (
                             <div className="edit-input" key={idx}>
                                 <input id={"input-new-item" + idx} defaultValue={elem} onClick={() => this.isSelected(idx)} onChange={e => { this.handleInputChange(e) }} />
@@ -130,4 +121,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps)(EditGroup)
+export default connect(mapStateToProps)(EditTarget)

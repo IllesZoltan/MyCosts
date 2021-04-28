@@ -6,7 +6,12 @@ import './Body.css'
 class Alert extends Component {
 
     handleSubmit(key){
-        this.dispatchToState('DEL-GRP',key)
+        if(this.props.alertState[0] === "group"){
+            this.dispatchToState('DEL-GRP',key)
+        }
+        if(this.props.alertState[0] === "target"){
+            this.dispatchToState('DEL-TRG',key)
+        }
     }
 
     hidePopup() {
@@ -20,7 +25,7 @@ class Alert extends Component {
     render() {
         return (
             <div className="alertWindow">
-                {Object.entries(this.props.alertState[0]).map(([keys, item], ind) => {
+                {Object.entries(this.props.alertState[1]).map(([keys, item], ind) => {
 
                     return (
                         <div className="alert-cont" key={ind}>

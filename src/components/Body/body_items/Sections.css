@@ -64,6 +64,14 @@
 }
 
 
+.active-item{
+    height: 43px;
+    padding-left: 20px;
+    color: rgb(167, 177, 177);
+    font-size: 22px;
+    font-weight: bolder;
+}
+
 
 .cost-cont-btn{
     display: inline-flex;

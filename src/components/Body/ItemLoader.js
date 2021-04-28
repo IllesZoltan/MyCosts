@@ -165,7 +165,6 @@ class ItemLoader extends Component {
 
 
     render() {
-        //console.log('IL item to load ',this.props.item_to_load);
         return (
             <div className={"loader " + this.props.addClName}>
                 <div>

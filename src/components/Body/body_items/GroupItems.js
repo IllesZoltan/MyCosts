@@ -13,6 +13,10 @@ class GroupItems extends Component {
         this.dispatchToState('SEL-GRP', grp)
     }
 
+    clearAll(){
+        this.dispatchToState('CLR', "")
+    }
+
     dispatchToState(type, value) {
         this.props.dispatch({ type: type, value: value })
     }
@@ -20,7 +24,7 @@ class GroupItems extends Component {
     render() {
         return (
             <div className="group-list">
-                <div className="newItm clear">Clear</div>
+                <Link to="/loaded-items"><div className="newItm clear" onClick={() => this.clearAll()}>Clear</div></Link>
                 <div className="group-item-cont">
                     {this.props.Groups.map(el => Object.entries(el).map(([key, elem], idx) => {
                         return (

@@ -6,11 +6,25 @@ import './Sections.css';
 class EditItems extends Component {
 
     newEntry(type) {
-        this.dispatcher('popup', type)
+        if(type === "NewGroup"){
+            this.dispatcher('popup', type)
+        }
+        if (type === "NewTarget") {
+            if (this.props.ActiveGroup) {
+                this.dispatcher('popup', type)
+            }
+        }
     }
 
-    editItems(type){
-        this.dispatcher('popup', type)
+    editItems(type) {
+        if(type === "EditGroup"){
+            this.dispatcher('popup', type)
+        }
+        if (type === "EditTarget") {
+            if (this.props.ActiveGroup) {
+                this.dispatcher('popup', type)
+            }
+        }
     }
 
     dispatcher(type, value) {
@@ -21,7 +35,7 @@ class EditItems extends Component {
         return (
             <div className="cost-cont-btn">
                 <Link to="/loaded_items"><div className="s-buttons" onClick={() => this.newEntry(this.props.sectionNew)}><img src="icons8-add-new-96.png" alt="New icon" /></div></Link>
-                <Link to="/loaded_items"><div className="s-buttons" onClick={() => {this.editItems(this.props.sectionEdit)}}><img src="icons8-edit-128.png" alt="Edit icon" /></div></Link>
+                <Link to="/loaded_items"><div className="s-buttons" onClick={() => { this.editItems(this.props.sectionEdit) }}><img src="icons8-edit-128.png" alt="Edit icon" /></div></Link>
             </div>
         )
     }

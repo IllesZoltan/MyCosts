@@ -6,11 +6,11 @@ import './Sections.css';
 class TargetItems extends Component {
 
     isClicked(idx, elem) {
-        const grp = {
-            gid: idx,
-            gname: elem
+        const targ = {
+            tid: idx,
+            tname: elem
         }
-        this.dispatchToState('SEL-GRP', grp)
+        this.dispatchToState('SEL-TRG', targ)
     }
 
     dispatchToState(type, value) {
@@ -19,8 +19,8 @@ class TargetItems extends Component {
 
     render() {
         return (
-            <div className="group-list">
-                <div className="group-item-cont">
+            <div className="item-list">
+                <div className="item-cont">
                     {this.props.Targets.map(el => Object.entries(el).map(([key, elem], idx) => {
                         return (
                             <Link to="/item_loader" key={idx}>

@@ -30,7 +30,9 @@ class Item {
 const initialState = {
   Groups: [],
   Targets: [],
+  Datas: [],
   ActiveGroup: "",
+  ActiveTarget: "",
   item_to_load: "group",
   showPopup: "",
   alertState: []
@@ -69,7 +71,7 @@ function reducer(state = initialState, action) {
 
       const groupToFetch = {}
       Object.entries(newGroup).forEach(([keys, values]) => {
-        groupToFetch.ID = keys;
+        groupToFetch.regNR = keys;
         groupToFetch.name = values;
       })
       const newGroupFetchingOptions = {
@@ -77,16 +79,15 @@ function reducer(state = initialState, action) {
         headers: { 'Content-type': 'application/json' },
         body: JSON.stringify(groupToFetch)
       }
-
       fetch(serverURL + '/addNewGroup', newGroupFetchingOptions)
         .catch(err => console.error('New group error: ', err))
-
 
       const addGrpState = {
         ...state,
         item_to_load: "group",
         ActiveGroup: "",
-        Targets: []
+        Targets: [],
+        Datas:[]
       }
       return addGrpState
 
@@ -105,7 +106,8 @@ function reducer(state = initialState, action) {
         ...state,
         item_to_load: "group",
         ActiveGroup: "",
-        Targets: []
+        Targets: [],
+        Datas:[]
       }
 
       return editGrpState
@@ -143,6 +145,8 @@ function reducer(state = initialState, action) {
       const selGRstate = {
         ...state,
         ActiveGroup: action.value.gname,
+        ActiveTarget: "",
+        Datas:[],
         item_to_load: "target"
       }
       return selGRstate
@@ -192,7 +196,7 @@ function reducer(state = initialState, action) {
       const nTarg = nTargItem.getItem(action.value)
       const newTargToFetch = {}
       Object.entries(nTarg).forEach(([keys, values]) => {
-        newTargToFetch.ID = keys;
+        newTargToFetch.regNR = keys;
         newTargToFetch.name = values;
       });
 
@@ -212,8 +216,6 @@ function reducer(state = initialState, action) {
       return addTrgState
 
     case "DEL-TRG":
-      console.log('idx del trg ',action.value);
-
       const delTargetToFetch = { delTrgID: action.value }
       const delTargetFetchingOptions = {
         method: 'POST',
@@ -230,7 +232,70 @@ function reducer(state = initialState, action) {
         alertState: []
       }
 
-    return delTargState
+      return delTargState
+
+    case "SEL-TRG":
+      const selTarg = { targID: action.value };
+      const selTargFetchingOptions = {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(selTarg)
+      }
+      fetch(serverURL + '/getCurrentTarget', selTargFetchingOptions)
+        .catch(err => { console.error('Selected target error: ', err) })
+
+      const selTargState = {
+        ...state,
+        item_to_load: "data",
+        ActiveTarget: action.value.tname
+      }
+      return selTargState
+
+
+
+    case "DATA_LIST-INIT":
+      const dataListToFetch = {
+        dList: action.value
+      }
+
+      const dataListFetchingOptions = {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(dataListToFetch)
+      }
+      fetch(serverURL + '/dataListInit', dataListFetchingOptions)
+        .catch(err => { console.error('Data list error: ', err) })
+
+      const dataListState = {
+        ...state,
+        Datas: action.value
+      }
+
+      return dataListState
+
+    case "ADD-DATA":
+      const nDataItem = new Item();
+      const newData = nDataItem.getItem(action.value);
+      const newDataToFetch = {};
+
+      Object.entries(newData).forEach(([keys, vals]) => {
+        newDataToFetch.regNR = keys;
+        newDataToFetch.name = vals;
+      })
+
+      const newDataFetchingOptions = {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(newDataToFetch)
+      }
+      fetch(serverURL + '/addNewData', newDataFetchingOptions)
+        .catch(err => { console.error('New data error: ', err) })
+
+      const newDataState = {
+        ...state,
+        showPopup: ""
+      }
+      return newDataState
 
 
 
@@ -246,7 +311,7 @@ function reducer(state = initialState, action) {
       const data = {}
       const newAlert = []
       data[action.value.key] = action.value.value
-      
+
       newAlert.push(action.value.type)
       newAlert.push(data)
 
@@ -261,7 +326,9 @@ function reducer(state = initialState, action) {
       const clearedState = {
         ...state,
         Targets: [],
+        Datas: [],
         ActiveGroup: "",
+        ActiveTarget: "",
         item_to_load: "group",
         showPopup: "",
         alertState: []

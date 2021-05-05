@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const { applyMiddleware } = require('redux');
+//const { applyMiddleware } = require('redux');
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./CostsDB.db');
 
@@ -19,16 +19,16 @@ db.serialize(() => {
     (error) => { console.log('Target creating error: ', error) }
   )
   db.run(
-      'CREATE TABLE IF NOT EXISTS data ( Gid VARCHAR(150), Tid VARCHAR(150), Did VARCHAR(150), Ddata VARCHAR(300))',  //Ddata = JSON.stringify(dátum, idő, leírás, ár)
-      (error) => { console.log('Data creating error: ',error) }
+    'CREATE TABLE IF NOT EXISTS data ( Gid VARCHAR(150), Tid VARCHAR(150), Did VARCHAR(150), Ddata VARCHAR(300))',  //Ddata = JSON.stringify(dátum, idő, leírás, ár)
+    (error) => { console.log('Data creating error: ', error) }
   )
   //db.close();
 })
 
 
 let GRP = undefined;
-let currGRP_TRG = undefined;
-let currTRG_DAT = undefined;
+let currGRP_TRG = {};
+let currTRG_DAT = {};
 
 let groupList = [];
 let targetList = [];
@@ -43,7 +43,7 @@ function groupAvailability(valToCheck) {
   let checkedOK = false;
   if (GRP !== undefined) {
     Object.keys(GRP).forEach(element => {
-      if (valToCheck.ID === element) {
+      if (valToCheck.regNR === element) {
         checkedOK = `Existing group id: ${element}:${GRP[element]}`;
       }
       if (valToCheck.name === GRP[element]) {
@@ -58,15 +58,15 @@ function groupAvailability(valToCheck) {
 
 function targetAvailability(valToCheck) {
   let TcheckedOK = false;
-  if (currGRP_TRG !== undefined) {
+  if (currGRP_TRG !== {}) {
     Object.keys(currGRP_TRG).forEach(element => {
       if (element === currGRPid.gid) {
         Object.keys(currGRP_TRG[element]).forEach(item => {
-          if (valToCheck.TrID === item) {
+          if (valToCheck.regNR === item) {
             TcheckedOK = `Existing target id: ${element}:${currGRP_TRG[element]}`;
           }
           if (valToCheck.name === currGRP_TRG[element][item]) {
-            TcheckedOK = `Existing target name: ${element}:${currGRP_TRG[element]}`;
+            TcheckedOK = `Existing target name: ${element}:${currGRP_TRG[element][item]}`;
           }
         })
       }
@@ -80,26 +80,25 @@ function targetAvailability(valToCheck) {
 
 function dataAvailability(valToCheck) {
   let DcheckedOK = false;
-  if (currTRG_DAT !== undefined) {
+  if (currTRG_DAT !== {}) {
     Object.keys(currTRG_DAT).forEach(element => {
       if (element === currGRPid.gid) {
         Object.keys(currTRG_DAT[element]).forEach(item => {
-          if(item === currTRGid.tid){
+          if (item === currTRGid.tid) {
             Object.keys(currTRG_DAT[element][item]).forEach(dat => {
-              
+              if (valToCheck.regNR === dat) {
+                DcheckedOK = `Existing data id: ${element}:${currGRP_TRG[element]}`;
+              }
+              if (JSON.stringify(valToCheck.name) === JSON.stringify(currGRP_TRG[element][item][dat])) {
+                DcheckedOK = `Existing data name: ${element}:${JSON.stringify(currGRP_TRG[element])}`;
+              }
             })
-          }
-          if (valToCheck.TrID === item) {
-            DcheckedOK = `Existing data id: ${element}:${currGRP_TRG[element]}`;
-          }
-          if (valToCheck.name === currGRP_TRG[element][item]) {
-            DcheckedOK = `Existing data name: ${element}:${currGRP_TRG[element]}`;
           }
         })
       }
     })
   } else {
-    currGRP_TRG = {}
+    currTRG_DAT = {}
   }
   return DcheckedOK;
 }
@@ -154,7 +153,7 @@ app.post('/addNewGroup', (req, res) => {
       //GRP[newGroup.ID] = newGroup.name
       db.serialize(() => {
         db.run(
-          `INSERT INTO grp VALUES ('${newGroup.ID}','${newGroup.name}')`,
+          `INSERT INTO grp VALUES ('${newGroup.regNR}','${newGroup.name}')`,
           (err) => { console.error('Inserting error: ', err) }
         )
       })
@@ -186,11 +185,11 @@ app.post('/groupDEL', (req, res) => {
   db.serialize(() => {
     db.run(
       `DELETE FROM data WHERE Gid = ${grDel}`,
-      (err) => { console.error('Group-Data deleting error: ',err) }
+      (err) => { console.error('Group-Data deleting error: ', err) }
     )
     db.run(
       `DELETE FROM targ WHERE Gid = ${grDel}`,
-      (err) => { console.error('Group-Target deleting error: ',err) }
+      (err) => { console.error('Group-Target deleting error: ', err) }
     )
     db.run(
       `DELETE FROM grp WHERE Gid = ${grDel}`,
@@ -208,8 +207,8 @@ app.post('/getCurrentGroup', (req, res) => {
   res.send(currGRPid)
 })
 
-app.post('/targetListInit', (req,res) => {
-  currGRP_TRG=req.body.Tlist;
+app.post('/targetListInit', (req, res) => {
+  currGRP_TRG[currGRPid.gid] = req.body.Tlist;
   alert = "";
   res.send(currGRP_TRG)
 })
@@ -235,91 +234,97 @@ app.post('/addNewTarget', (req, res) => {
   const newTarget = req.body;
   const newTargObject = {}
   const tarIsAvailable = targetAvailability(newTarget);
-  if (typeof (tarIsAvailable) === 'boolean') {
-    if (!tarIsAvailable) {
-      newTargObject[newTarget.ID] = newTarget.name
-      currGRP_TRG[currGRPid.gid] = newTargObject
-      db.serialize(() => {
-        db.run(
-          `INSERT INTO targ VALUES ('${currGRPid.gid}','${newTarget.ID}','${newTarget.name}')`,
-          (err) => { console.error('Inserting error: ', err) }
-          )
-      })
-    }
+
+  if (!tarIsAvailable) {
+    newTargObject[newTarget.regNR] = newTarget.name
+    //currGRP_TRG[currGRPid.gid] = newTargObject
+    db.serialize(() => {
+      db.run(
+        `INSERT INTO targ VALUES ('${currGRPid.gid}','${newTarget.regNR}','${newTarget.name}')`,
+        (err) => { console.error('Inserting error: ', err) }
+      )
+    })
   } else {
     alert = tarIsAvailable
   }
   res.send(newTarget)
 })
 
-app.post('/targEDIT', (req,res) => {
+app.post('/targEDIT', (req, res) => {
   const targEditID = req.body.tEditID;
   db.serialize(() => {
     db.run(
       `UPDATE targ SET Tname = ${JSON.stringify(targEditID.tName)} WHERE Gid = ${currGRPid.gid} AND Tid = ${targEditID.tId}`,
-      (err) => {console.error('Target updating error: ',err)}
+      (err) => { console.error('Target updating error: ', err) }
     )
   })
   res.send(targEditID)
 })
 
-app.post('/targetDEL', (req,res) => {
+app.post('/targetDEL', (req, res) => {
   const targetID = req.body.delTrgID;
-  console.log('srv targetDel ',targetID);
   db.serialize(() => {
     db.run(
       `DELETE FROM data WHERE Gid = ${currGRPid.gid} AND Tid = ${targetID}`,
-      (err) => { console.error('Target-Data deleting error: ',err) }
+      (err) => { console.error('Target-Data deleting error: ', err) }
     )
     db.run(
       `DELETE FROM targ WHERE Gid = ${currGRPid.gid} AND Tid = ${targetID}`,
-      (err) => {console.error('Target deleting error: ',err)}
+      (err) => { console.error('Target deleting error: ', err) }
     )
   })
   res.send(targetID)
 })
 
-app.post('/getCurrentTarget', (req,res) => {
+
+
+app.post('/getCurrentTarget', (req, res) => {
   dataList.length = 0;
-  currTRGid = req.body.trID;
+  currTRGid = req.body.targID;
   res.send(currTRGid);
 })
 
-
+app.post('/dataListInit', (req, res) => {
+  const targDat = {};
+  targDat[currTRGid.tid] = req.body.dList
+  currTRG_DAT[currGRPid.gid] = targDat;                                                       //IDE BETENNI A GID MEG TID
+  alert = "";
+  res.send(currTRG_DAT)
+})
 
 app.get('/getCurrentTargetData', (req, res) => {
   const datas = {};
   db.serialize(() => {
     db.all(
       `SELECT * FROM data WHERE Gid = ${currGRPid.gid} AND Tid = ${currTRGid.tid}`,
-      (err,row) => {
-        if(err){console.error('Data loading error: ',err)}
+      (err, row) => {
+        if (err) { console.error('Data loading error: ', err) }
         row.forEach(item => {
           datas[item.Did] = item.Ddata;
         })
-        dataList=[[alert],datas]
+        dataList = [[alert], datas]
         res.send(dataList);
       }
     )
   })
 })
 
-app.post('/addNewData',(req,res) => {
+app.post('/addNewData', (req, res) => {
   const newData = req.body;
-  db.serialize(() => {
-    db.run(
-      `INSERT INTO data VALUES('${currGRPid.gid}','${currTRGid.tid}','${newData.ID}','${JSON.stringify(newData.name)}')`,
-      (err) => {console.log('Data inserting error: ',err)}
-    )
-  })
+  const datIsAvailable = dataAvailability(newData);
+
+  if (!datIsAvailable) {
+    db.serialize(() => {
+      db.run(
+        `INSERT INTO data VALUES('${currGRPid.gid}','${currTRGid.tid}','${newData.regNR}','${JSON.stringify(newData.name)}')`,
+        (err) => { console.log('Data inserting error: ', err) }
+      )
+    })
+  }
   res.send(newData)
 })
 
-app.post('/dataListInit', (req,res) => {
-  currTRG_DAT = req.body.Dlist;
-  alert = "";
-  res.send(currTRG_DAT)
-})
+
 
 
 
@@ -347,7 +352,7 @@ app.listen(PORT, () => {
 // async function getGr() {
 
 //   const tempGRP = await DB.getGroups();
-//   GRP = tempGRP;
+//   GRP = tem1pGRP;
 //   console.log('srv awaited ', GRP);
 //   //if (tempGRP) { GRP = tempGRP }
 // }

@@ -23,9 +23,9 @@ class GroupItems extends Component {
 
     render() {
         return (
-            <div className="group-list">
+            <div className="item-list">
                 <Link to="/loaded-items"><div className="newItm clear" onClick={() => this.clearAll()}>Clear</div></Link>
-                <div className="group-item-cont">
+                <div className="item-cont">
                     {this.props.Groups.map(el => Object.entries(el).map(([key, elem], idx) => {
                         return (
                             <Link to="/item_loader" key={idx}>

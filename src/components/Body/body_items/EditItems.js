@@ -14,6 +14,11 @@ class EditItems extends Component {
                 this.dispatcher('popup', type)
             }
         }
+        if (type === "NewData") {
+            if (this.props.ActiveTarget) {
+                this.dispatcher('popup', type)
+            }
+        }
     }
 
     editItems(type) {
@@ -21,6 +26,11 @@ class EditItems extends Component {
             this.dispatcher('popup', type)
         }
         if (type === "EditTarget") {
+            if (this.props.ActiveGroup) {
+                this.dispatcher('popup', type)
+            }
+        }
+        if (type === "EditData") {
             if (this.props.ActiveGroup) {
                 this.dispatcher('popup', type)
             }

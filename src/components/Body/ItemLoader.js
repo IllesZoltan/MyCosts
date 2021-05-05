@@ -73,7 +73,7 @@ class ItemLoader extends Component {
             this.stateDispatcher('GROUP_LIST-INIT', this.state.GroupsData)
         }
 
-        if (this.props.load_all === 'all' || this.props.item_to_load === 'target' || this.props.item_to_load === 'new-target') {
+        if (this.props.item_to_load === 'target' || this.props.item_to_load === 'new-target') {
             this.stateDispatcher('TARGET_LIST-INIT', this.state.CurrentGroupTargets)
             //console.log('IL targ item to load', this.props.item_to_load, this.state.CurrentGroupTargets);
         }
@@ -97,7 +97,7 @@ class ItemLoader extends Component {
                 if (Object.entries(data[1]).length === 0) {
                     iAlert = "Nincs letölthető csoport ..."
                     this.stateDispatcher('popup', 'NewGroup')
-                }else{
+                } else {
                     iAlert = data[0][0];
                     this.stateDispatcher('popup', '')
                 }
@@ -135,9 +135,13 @@ class ItemLoader extends Component {
             .then(response => response.json())
             .then(data => {
                 let dAlert = "";
-                if (data.length === 0) {
-                    dAlert = `${this.props.ActiveTarget}\n\nNincsenek letölthető adatok ...`;
-                    this.stateDispatcher('popup', 'DN');
+                if (data[0][0] === "") {
+                    if (Object.entries(data[1]).length === 0) {
+                        dAlert = `${this.props.ActiveTarget}\n\nNincsenek letölthető adatok ...`;
+                        this.stateDispatcher('popup', 'NewData');
+                    }
+                } else {
+                    dAlert = data[0][0];
                 }
                 this.setState({
                     CurrentTargetData: data[1],
@@ -148,13 +152,13 @@ class ItemLoader extends Component {
 
 
     componentDidMount() {
-        if (this.props.load_all === 'all' || this.props.item_to_load === 'group' || this.props.item_to_load === 'new-group' || this.props.item_to_load === 'del-grp' || this.props.item_to_load === 'edit-grp') {
+        if (/*this.props.load_all === 'all' || */this.props.item_to_load === 'group' || this.props.item_to_load === 'new-group' || this.props.item_to_load === 'del-grp' || this.props.item_to_load === 'edit-grp') {
             this.getGroups();
         }
-        if (this.props.load_all === 'all' || this.props.item_to_load === 'target' || this.props.item_to_load === 'new-target' || this.props.item_to_load === 'del-target' || this.props.item_to_load === 'edit-target') {
+        if (/*this.props.load_all === 'all' || */this.props.item_to_load === 'target' || this.props.item_to_load === 'new-target' || this.props.item_to_load === 'del-target' || this.props.item_to_load === 'edit-target') {
             this.getTargets();
         }
-        if (this.props.item_to_load === 'datas' || this.props.item_to_load === 'new-data') {
+        if (this.props.item_to_load === 'data' || this.props.item_to_load === 'new-data') {
             this.getData();
         }
     }

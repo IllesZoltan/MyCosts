@@ -9,6 +9,8 @@ import NewGroupEntry from '../Popups/NewGroupEntry'
 import EditGroup from '../Popups/EditGroup'
 import NewTargetEntry from '../Popups/NewTargetEntry'
 import EditTarget from '../Popups/EditTarget'
+import NewDataEntry from '../Popups/NewDataEntry'
+import EditData from '../Popups/EditData'
 
 
 
@@ -32,6 +34,13 @@ class Body extends Component {
         }
         if(this.props.showPopup === "EditTarget"){
             popup = <EditTarget title = "Target"/>
+        }
+
+        if(this.props.showPopup === "NewData"){
+            popup = <NewDataEntry title = "Data" />
+        }
+        if(this.props.showPopup === "EditData"){
+            popup = <EditData title = "Data"/>
         }
         return popup;
     }

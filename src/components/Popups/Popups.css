@@ -16,8 +16,8 @@
 .new-cont{
     position: absolute;
     width: 410px;
-    margin-top: -10%;
-    margin-left: 20%;
+    margin-left: 15%;
+    margin-right: 15%;
     padding-bottom: 30px;
     color: rgb(12, 44, 44);
     font-size: 1.5em;

@@ -87,7 +87,7 @@ function reducer(state = initialState, action) {
         item_to_load: "group",
         ActiveGroup: "",
         Targets: [],
-        Datas:[]
+        Datas: []
       }
       return addGrpState
 
@@ -107,7 +107,7 @@ function reducer(state = initialState, action) {
         item_to_load: "group",
         ActiveGroup: "",
         Targets: [],
-        Datas:[]
+        Datas: []
       }
 
       return editGrpState
@@ -125,6 +125,7 @@ function reducer(state = initialState, action) {
       const delGrpState = {
         ...state,
         Targets: [],
+        Datas: [],
         ActiveGroup: "",
         item_to_load: "group",
         showPopup: "",
@@ -146,7 +147,7 @@ function reducer(state = initialState, action) {
         ...state,
         ActiveGroup: action.value.gname,
         ActiveTarget: "",
-        Datas:[],
+        Datas: [],
         item_to_load: "target"
       }
       return selGRstate
@@ -186,7 +187,8 @@ function reducer(state = initialState, action) {
       const editTargState = {
         ...state,
         item_to_load: "target",
-        showPopup: ""
+        showPopup: "",
+        Datas: []
       }
 
       return editTargState
@@ -210,9 +212,10 @@ function reducer(state = initialState, action) {
 
       const addTrgState = {
         ...state,
-        showPopup: ""
+        item_to_load: "target",
+        showPopup: "",
+        Datas: []
       }
-
       return addTrgState
 
     case "DEL-TRG":
@@ -227,6 +230,7 @@ function reducer(state = initialState, action) {
 
       const delTargState = {
         ...state,
+        Datas: [],
         item_to_load: "target",
         showPopup: "",
         alertState: []
@@ -296,6 +300,40 @@ function reducer(state = initialState, action) {
         showPopup: ""
       }
       return newDataState
+
+    case 'EDIT-DATA':
+      const editedData = action.value;
+      const editedDataToFetch = { dEditID: editedData };
+      const editedDataFetchingOptions = {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(editedDataToFetch)
+      }
+      fetch(serverURL + '/dataEDIT', editedDataFetchingOptions)
+        .catch(err => { console.error('Edited data error: ', err) })
+
+      const editedDataState = {
+        ...state,
+        showPopup: "",
+      }
+      return editedDataState
+
+    case 'DEL-DATA':
+      console.log('idx del data ', action.value);
+      const delDataToFetch = { delDta: action.value }
+      const delDataFetchingOptions = {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(delDataToFetch)
+      }
+      fetch(serverURL + '/dataDEL', delDataFetchingOptions)
+        .catch(err => console.log('Deleting data error: ', err))
+
+      const dataDelState = {
+        ...state,
+        showPopup: ""
+      }
+      return dataDelState
 
 
 

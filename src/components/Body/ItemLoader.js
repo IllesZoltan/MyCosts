@@ -80,7 +80,7 @@ class ItemLoader extends Component {
 
         if (this.props.item_to_load === 'data' || this.props.item_to_load === 'new-data') {
             this.stateDispatcher('DATA_LIST-INIT', this.state.CurrentTargetData)
-            //console.log('IL data item to load', this.props.item_to_load);
+            //console.log('IL data item to load', this.state.CurrentTargetData);
         }
     }
 
@@ -159,7 +159,7 @@ class ItemLoader extends Component {
             this.getTargets();
         }
         if (this.props.item_to_load === 'data' || this.props.item_to_load === 'new-data') {
-            this.getData();
+           this.getData();
         }
     }
 

@@ -9,7 +9,7 @@ class DataItems extends Component {
         let retVal = "";
         if (nr === 3) {
             if (val.length > 3) {
-                retVal = val.slice(0, val.length - 3) + "." + val.slice((val.length - 3) - 1, val.length - 1) + " Ft"
+                retVal = val.slice(0, val.length - 3) + "." + val.slice((val.length - 3), val.length) + " Ft"
             } else {
                 retVal = val + " Ft"
             }

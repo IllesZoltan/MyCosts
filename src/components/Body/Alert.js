@@ -12,6 +12,9 @@ class Alert extends Component {
         if(this.props.alertState[0] === "target"){
             this.dispatchToState('DEL-TRG',key)
         }
+        if(this.props.alertState[0] === "data"){
+            this.dispatchToState('DEL-DATA',key)
+        }
     }
 
     hidePopup() {

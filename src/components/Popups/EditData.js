@@ -3,7 +3,7 @@ import './Popups.css'
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
-let newInput = "";
+const newInput = [];
 
 class EditData extends Component {
     constructor() {
@@ -15,16 +15,22 @@ class EditData extends Component {
     }
 
 
-    handleInputChange(e) {
-        newInput = e.target.value
+    handleInputChange(e, id) {
+        newInput[id] = e.target.value
     }
 
     handleSubmit(key) {
-        const editedTRG = {
-            tId: key,
-            tName: newInput
+        const dataObject = {};
+        const inpIDs = ['date', 'time', 'description', 'price'];
+
+        for (let a = 0; a < newInput.length; a++) {
+            dataObject[inpIDs[a]] = newInput[a]
         }
-        this.dispatchToState("EDIT-TRG", editedTRG);
+        const editedDATA = {
+            dId: key,
+            dName: dataObject
+        }
+        this.dispatchToState("EDIT-DATA", editedDATA);
     }
 
     hidePopup() {
@@ -45,14 +51,20 @@ class EditData extends Component {
     }
 
     isSelected(idx) {
-        const nrOfItems = Object.keys(this.props.Targets[0]).length;
+        const inputIDs = ['date', 'time', 'description', 'price']
+        const nrOfItems = Object.keys(this.props.Datas).length;
         if (this.state.toEdit) {
             for (let i = 0; i < nrOfItems; i++) {
                 if (i !== idx) {
-                    document.getElementById('input-new-item' + i).disabled = true
+                    for (let j = 0; j < inputIDs.length; j++) {
+                        document.getElementById('input-' + inputIDs[j] + i).disabled = true
+                    }
                 }
             }
-            document.getElementById('input-new-item' + idx).style.backgroundColor = 'rgb(161, 255, 156)'
+            for (let j = 0; j < inputIDs.length; j++) {
+                document.getElementById('input-' + inputIDs[j] + idx).style.backgroundColor = 'rgb(161, 255, 156)';
+                newInput[j] = document.getElementById('input-' + inputIDs[j] + idx).value;
+            }
             this.setState({
                 selectedItem: idx,
                 toEdit: false
@@ -74,17 +86,30 @@ class EditData extends Component {
     }
 
     trashBtn(keys, elem, idx) {
+        const dataValues = Object.values(JSON.parse(elem))
+        let dataAlert = `${dataValues[0]}/${dataValues[2]}/${dataValues[3]}`
         let trash = undefined;
         let trashIMG = ""
         if (this.state.selectedItem === "" || this.state.selectedItem === idx) {
             trashIMG = 'trash.png';
-            trash = <Link to="alert"><div className="edit-btn" onClick={() => this.showAlert(keys, elem)}><img src={trashIMG} alt="trash icon" /></div></Link>
+            trash = <Link to="alert"><div className="edit-btn" onClick={() => this.showAlert(keys, dataAlert)}><img src={trashIMG} alt="trash icon" /></div></Link>
         } else {
             trashIMG = "trash-inactive.png";
             trash = <div className="edit-btn"><img src={trashIMG} alt="trash icon" /></div>
         }
         return trash
     }
+
+    dataDetails(elem, idx) {
+        const datas = <div>
+            <input id={"input-date" + idx} className="data-input" defaultValue={JSON.parse(elem)["date"]} onClick={() => this.isSelected(idx)} onChange={e => { this.handleInputChange(e, 0) }} />
+            <input id={"input-time" + idx} className="data-input" defaultValue={JSON.parse(elem)["time"]} onClick={() => this.isSelected(idx)} onChange={e => { this.handleInputChange(e, 1) }} />
+            <input id={"input-description" + idx} className="data-input" defaultValue={JSON.parse(elem)["description"]} onClick={() => this.isSelected(idx)} onChange={e => { this.handleInputChange(e, 2) }} />
+            <input id={"input-price" + idx} className="data-input" defaultValue={JSON.parse(elem)["price"]} onClick={() => this.isSelected(idx)} onChange={e => { this.handleInputChange(e, 3) }} />
+        </div>
+        return datas
+    }
+
 
 
 
@@ -97,10 +122,7 @@ class EditData extends Component {
                     {Object.entries(this.props.Datas).map(([keys, elem], idx) => {
                         return (
                             <div className="edit-input" key={idx}>
-                                <input id={"input-new-item" + idx} className="data-input" defaultValue={elem} onClick={() => this.isSelected(idx)} onChange={e => { this.handleInputChange(e) }} />
-                                <input id={"input-new-item" + idx} className="data-input" defaultValue={elem} onClick={() => this.isSelected(idx)} onChange={e => { this.handleInputChange(e) }} />
-                                <input id={"input-new-item" + idx} className="data-input" defaultValue={elem} onClick={() => this.isSelected(idx)} onChange={e => { this.handleInputChange(e) }} />
-                                <input id={"input-new-item" + idx} className="data-input" defaultValue={elem} onClick={() => this.isSelected(idx)} onChange={e => { this.handleInputChange(e) }} />
+                                {this.dataDetails(elem, idx)}
                                 {this.checkBtn(keys, idx)}
                                 {this.trashBtn(keys, elem, idx)}
                             </div>

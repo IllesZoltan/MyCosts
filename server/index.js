@@ -287,7 +287,7 @@ app.post('/getCurrentTarget', (req, res) => {
 app.post('/dataListInit', (req, res) => {
   const targDat = {};
   targDat[currTRGid.tid] = req.body.dList
-  currTRG_DAT[currGRPid.gid] = targDat;                                                       //IDE BETENNI A GID MEG TID
+  currTRG_DAT[currGRPid.gid] = targDat;
   alert = "";
   res.send(currTRG_DAT)
 })
@@ -317,14 +317,37 @@ app.post('/addNewData', (req, res) => {
     db.serialize(() => {
       db.run(
         `INSERT INTO data VALUES('${currGRPid.gid}','${currTRGid.tid}','${newData.regNR}','${JSON.stringify(newData.name)}')`,
-        (err) => { console.log('Data inserting error: ', err) }
+        (err) => { console.error('Data inserting error: ', err) }
       )
     })
   }
   res.send(newData)
 })
 
+app.post('/dataEDIT', (req, res) => {
+  const editData = req.body.dEditID;
+  db.serialize(() => {
+    db.run(                       //Ha object-et stringify, akkor ''-közé kell helyezni
+      `UPDATE data SET Ddata = '${JSON.stringify(editData.dName)}' WHERE Gid = ${currGRPid.gid} AND Tid = ${currTRGid.tid} AND Did = ${editData.dId}`,
+      (err) => {console.error('Data editing error: ',err)}
+    )
+  })
 
+  res.send(editData)
+})
+
+app.post('/dataDEL', (req, res) => {
+  const delDataID = req.body.delDta
+
+  db.serialize(() => {
+    db.run(
+      `DELETE FROM data WHERE Gid = ${currGRPid.gid} AND Tid = ${currTRGid.tid} AND Did = ${delDataID}`,
+      (err) => {console.error('Data deleting error: ',err)}
+    )
+  })
+
+  res.send(delDataID)
+})
 
 
 

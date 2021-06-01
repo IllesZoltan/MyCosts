@@ -33,7 +33,7 @@ class ItemLoader extends Component {
         if (this.props.item_to_load === 'group') {
             this.state.itemAlert === "" ? infos = '\nCsoport lista betöltése ...' : infos = this.state.itemAlert
         }
-        if (this.props.item_to_load === 'new-group') {
+        if (this.props.item_to_load === 'new-grp') {
             this.state.itemAlert === "" ? infos = '\nÚj csoport mentése ...' : infos = this.state.itemAlert
         }
         if (this.props.item_to_load === 'edit-grp') {
@@ -46,13 +46,13 @@ class ItemLoader extends Component {
         if (this.props.item_to_load === 'target') {
             this.state.itemAlert === "" ? infos = `${this.props.ActiveGroup}\n\n célok betöltése ...` : infos = this.state.itemAlert
         }
-        if (this.props.item_to_load === 'new-target') {
+        if (this.props.item_to_load === 'new-trg') {
             this.state.itemAlert === "" ? infos = `${this.props.ActiveGroup}\n\n új cél mentése ...` : infos = this.state.itemAlert
         }
-        if (this.props.item_to_load === 'del-target') {
+        if (this.props.item_to_load === 'del-trg') {
             infos = `Csoport: ${this.props.ActiveGroup}\n\n cél törlése ...`
         }
-        if (this.props.item_to_load === 'edit-target') {
+        if (this.props.item_to_load === 'edit-trg') {
             infos = `Csoport: ${this.props.ActiveGroup}\n\n cél módosítva ...`
         }
 
@@ -73,14 +73,12 @@ class ItemLoader extends Component {
             this.stateDispatcher('GROUP_LIST-INIT', this.state.GroupsData)
         }
 
-        if (this.props.item_to_load === 'target' || this.props.item_to_load === 'new-target') {
+        if (this.props.item_to_load === 'target' || this.props.item_to_load === 'new-target' || this.props.item_to_load === 'del-target' || this.props.item_to_load === 'edit-target') {
             this.stateDispatcher('TARGET_LIST-INIT', this.state.CurrentGroupTargets)
-            //console.log('IL targ item to load', this.props.item_to_load, this.state.CurrentGroupTargets);
         }
 
         if (this.props.item_to_load === 'data' || this.props.item_to_load === 'new-data') {
             this.stateDispatcher('DATA_LIST-INIT', this.state.CurrentTargetData)
-            //console.log('IL data item to load', this.state.CurrentTargetData);
         }
     }
 
@@ -98,7 +96,7 @@ class ItemLoader extends Component {
                     iAlert = "Nincs letölthető csoport ..."
                     this.stateDispatcher('popup', 'NewGroup')
                 } else {
-                    iAlert = data[0][0];
+                    iAlert = data[0];
                     this.stateDispatcher('popup', '')
                 }
                 this.setState({
@@ -114,13 +112,13 @@ class ItemLoader extends Component {
             .then(response => response.json())
             .then(data => {
                 let tAlert = "";
-                if (data[0][0] === "") {
+                if (data[0] === "") {
                     if (Object.entries(data[1]).length === 0) {
                         tAlert = `Csoport: ${this.props.ActiveGroup}\n\nNincs letölthető cél ...`;
                         this.stateDispatcher('popup', 'NewTarget');
                     }
                 } else {
-                    tAlert = data[0][0];
+                    tAlert = data[0];
                 }
                 this.setState({
                     CurrentGroupTargets: data[1],
@@ -135,13 +133,13 @@ class ItemLoader extends Component {
             .then(response => response.json())
             .then(data => {
                 let dAlert = "";
-                if (data[0][0] === "") {
+                if (data[0] === "") {
                     if (Object.entries(data[1]).length === 0) {
                         dAlert = `${this.props.ActiveTarget}\n\nNincsenek letölthető adatok ...`;
                         this.stateDispatcher('popup', 'NewData');
                     }
                 } else {
-                    dAlert = data[0][0];
+                    dAlert = data[0];
                 }
                 this.setState({
                     CurrentTargetData: data[1],
@@ -152,10 +150,10 @@ class ItemLoader extends Component {
 
 
     componentDidMount() {
-        if (/*this.props.load_all === 'all' || */this.props.item_to_load === 'group' || this.props.item_to_load === 'new-group' || this.props.item_to_load === 'del-grp' || this.props.item_to_load === 'edit-grp') {
+        if (this.props.item_to_load === 'group' || this.props.item_to_load === 'new-group' || this.props.item_to_load === 'del-grp' || this.props.item_to_load === 'edit-grp') {
             this.getGroups();
         }
-        if (/*this.props.load_all === 'all' || */this.props.item_to_load === 'target' || this.props.item_to_load === 'new-target' || this.props.item_to_load === 'del-target' || this.props.item_to_load === 'edit-target') {
+        if (this.props.item_to_load === 'target' || this.props.item_to_load === 'new-target' || this.props.item_to_load === 'del-target' || this.props.item_to_load === 'edit-target') {
             this.getTargets();
         }
         if (this.props.item_to_load === 'data' || this.props.item_to_load === 'new-data') {

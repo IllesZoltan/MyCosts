@@ -84,10 +84,10 @@ function reducer(state = initialState, action) {
 
       const addGrpState = {
         ...state,
-        item_to_load: "group",
         ActiveGroup: "",
         Targets: [],
-        Datas: []
+        Datas: [],
+        item_to_load: "new-grp"
       }
       return addGrpState
 
@@ -104,10 +104,10 @@ function reducer(state = initialState, action) {
 
       const editGrpState = {
         ...state,
-        item_to_load: "group",
         ActiveGroup: "",
         Targets: [],
-        Datas: []
+        Datas: [],
+        item_to_load: "edit-grp"
       }
 
       return editGrpState
@@ -127,9 +127,9 @@ function reducer(state = initialState, action) {
         Targets: [],
         Datas: [],
         ActiveGroup: "",
-        item_to_load: "group",
         showPopup: "",
-        alertState: []
+        alertState: [],
+        item_to_load: "del-grp"
       }
       return delGrpState
 
@@ -152,6 +152,8 @@ function reducer(state = initialState, action) {
       }
       return selGRstate
 
+
+
     case "TARGET_LIST-INIT":
       const tarListToFetch = {
         Tlist: action.value
@@ -173,6 +175,8 @@ function reducer(state = initialState, action) {
       }
       return targetsState
 
+
+
     case "EDIT-TRG":
       const editedTarget = action.value;
       const editTargetToFetch = { tEditID: editedTarget }
@@ -186,9 +190,9 @@ function reducer(state = initialState, action) {
 
       const editTargState = {
         ...state,
-        item_to_load: "target",
         showPopup: "",
-        Datas: []
+        Datas: [],
+        item_to_load: "edit-trg"
       }
 
       return editTargState
@@ -212,8 +216,8 @@ function reducer(state = initialState, action) {
 
       const addTrgState = {
         ...state,
-        item_to_load: "target",
         showPopup: "",
+        item_to_load: "new-trg",
         Datas: []
       }
       return addTrgState
@@ -231,8 +235,8 @@ function reducer(state = initialState, action) {
       const delTargState = {
         ...state,
         Datas: [],
-        item_to_load: "target",
         showPopup: "",
+        item_to_load: "del-trg",
         alertState: []
       }
 
@@ -297,7 +301,8 @@ function reducer(state = initialState, action) {
 
       const newDataState = {
         ...state,
-        showPopup: ""
+        showPopup: "",
+        item_to_load: "new-data"
       }
       return newDataState
 
@@ -319,7 +324,6 @@ function reducer(state = initialState, action) {
       return editedDataState
 
     case 'DEL-DATA':
-      console.log('idx del data ', action.value);
       const delDataToFetch = { delDta: action.value }
       const delDataFetchingOptions = {
         method: 'POST',
@@ -334,6 +338,12 @@ function reducer(state = initialState, action) {
         showPopup: ""
       }
       return dataDelState
+
+
+
+    case "G-AVARAGE":
+
+      return state
 
 
 

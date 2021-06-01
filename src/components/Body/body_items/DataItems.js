@@ -5,7 +5,7 @@ import './Sections.css';
 
 class DataItems extends Component {
 
-    currencyConverter(nr, val) {
+    currencyDisplayer(nr, val) {
         let retVal = "";
         if (nr === 3) {
             if (val.length > 3) {
@@ -28,7 +28,7 @@ class DataItems extends Component {
                             <div className="dataRow">
                                 {Object.values(JSON.parse(elem)).map((items, ind) => {
                                     return (
-                                        <div className="dataVal" key={ind}>{this.currencyConverter(ind, items)}</div>
+                                        <div className="dataVal" key={ind}>{this.currencyDisplayer(ind, items)}</div>
                                     )
                                 })
                                 }

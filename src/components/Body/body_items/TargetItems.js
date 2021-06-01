@@ -33,24 +33,6 @@ class TargetItems extends Component {
             </div>
         )
     }
-
-
-    // render() {
-    //     return (
-    //         <div className="ActiveGroupTargets">
-    //             {this.props.Targets.map(el => {
-    //                 Object.entries(el).map(([key, elem], idx) => {
-    //                     return (
-    //                         <Link to="/item_loader" key={idx}>
-    //                             <div className={"newItm " + this.props.tar_additional_clName(elem, this.props.ActiveTarget)} onClick={this.props.tar_selection}>{elem}</div>
-    //                         </Link>
-    //                     )
-    //                 })
-    //             })
-    //             }
-    //         </div>
-    //     )
-    // }
 }
 
 const mapStateToProps = state => {

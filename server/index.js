@@ -103,6 +103,16 @@ function dataAvailability(valToCheck) {
   return DcheckedOK;
 }
 
+function GRannualAvarage(prices) {
+  let sum = 0;
+  let avarage = 0;
+  console.log('srv func ann avarage ', prices);
+  sum = prices.reduce(function (a, b) { a + b }, 0);
+  avarage = sum / prices.length
+
+  return avarage;
+}
+
 
 app.use(cors());
 app.use(express.json());
@@ -128,17 +138,12 @@ app.get('/getGroupList', (req, res) => {
     db.all(
       'SELECT * FROM grp',
       (err, row) => {
-        if (err) { console.log('Groups download error: ', err); }
+        if (err) { console.error('Groups download error: ', err); }
         row.forEach(item => {
           groups[item.Gid] = item.Gname
         })
 
-        // if(Object.values(groups).length === 0){
-        //   alert = "Nincs letölthető csoport ..."
-        // }else{
-        //   alert = ""
-        // }
-        groupList = [[alert], groups]
+        groupList = [alert, groups]
         res.send(groupList)
       }
     )
@@ -167,7 +172,6 @@ app.post('/addNewGroup', (req, res) => {
 
 app.post('/groupEDIT', (req, res) => {
   const grEdit = req.body.grEditID;
-  //GRP[grEdit.gId] = grEdit.gName;
   db.serialize(() => {
     db.run(
       // JSON.stringify(grEdit.gName) = OK ; grEdit.gName = SQLITE error:no such column
@@ -181,7 +185,6 @@ app.post('/groupEDIT', (req, res) => {
 
 app.post('/groupDEL', (req, res) => {
   const grDel = req.body.delGrID;
-  //delete GRP[grDel]
   db.serialize(() => {
     db.run(
       `DELETE FROM data WHERE Gid = ${grDel}`,
@@ -200,30 +203,67 @@ app.post('/groupDEL', (req, res) => {
 })
 
 
+app.get('/grpAvarages', (req, res) => {
+  let nr = "";
+
+  // db.all(
+  //   `SELECT * FROM data WHERE Gid = ${currGRPid.gid} AND Tid = ${item.Tid}`,
+  //   (err, row) => {
+  //     if (err) { console.error('Group annual avarage-data error: ', err); }
+  //     annualAvarage = (annualAvarage + parseInt(JSON.parse(row[0].Ddata)["price"])) / dataNr;
+  //     dataNr++;
+
+  //   }
+  // )
+
+  res.send(nr)
+})
+
 
 app.post('/getCurrentGroup', (req, res) => {
   targetList.length = 0;
   currGRPid = req.body.grID;
-  res.send(currGRPid)
+  res.send();
 })
 
 app.post('/targetListInit', (req, res) => {
   currGRP_TRG[currGRPid.gid] = req.body.Tlist;
   alert = "";
-  res.send(currGRP_TRG)
+  res.send()
 })
 
 app.get('/getCurrentGroupTargets', (req, res) => {
   const targs = {};
+  let items = [];
+  // let annualAvarage = 0;
+  // let dataNr = 1;
   db.serialize(() => {
     db.all(
       `SELECT * FROM targ WHERE Gid = ${currGRPid.gid}`,
       (err, row) => {
         if (err) { console.error('Target download error: ', err); }
+        items = row;
         row.forEach(item => {
           targs[item.Tid] = item.Tname;
+
+
+
+
+          //****Csoport átlag kiszámítás***
+
+
+
+          // db.all(
+          //   `SELECT * FROM data WHERE Gid = ${currGRPid.gid} AND Tid = ${item.Tid}`,
+          //   (err, row) => {
+          //     if (err) { console.error('Group annual avarage-data error: ', err); }
+          //     annualAvarage = (annualAvarage + parseInt(JSON.parse(row[0].Ddata)["price"])) / dataNr;
+          //     dataNr++;
+
+          //   }
+          //   )
         })
-        targetList = [[alert], targs]
+        targetList = [alert, targs]
         res.send(targetList)
       }
     )
@@ -302,7 +342,7 @@ app.get('/getCurrentTargetData', (req, res) => {
         row.forEach(item => {
           datas[item.Did] = item.Ddata;
         })
-        dataList = [[alert], datas]
+        dataList = [alert, datas]
         res.send(dataList);
       }
     )
@@ -329,7 +369,7 @@ app.post('/dataEDIT', (req, res) => {
   db.serialize(() => {
     db.run(                       //Ha object-et stringify, akkor ''-közé kell helyezni
       `UPDATE data SET Ddata = '${JSON.stringify(editData.dName)}' WHERE Gid = ${currGRPid.gid} AND Tid = ${currTRGid.tid} AND Did = ${editData.dId}`,
-      (err) => {console.error('Data editing error: ',err)}
+      (err) => { console.error('Data editing error: ', err) }
     )
   })
 
@@ -342,7 +382,7 @@ app.post('/dataDEL', (req, res) => {
   db.serialize(() => {
     db.run(
       `DELETE FROM data WHERE Gid = ${currGRPid.gid} AND Tid = ${currTRGid.tid} AND Did = ${delDataID}`,
-      (err) => {console.error('Data deleting error: ',err)}
+      (err) => { console.error('Data deleting error: ', err) }
     )
   })
 

@@ -12,6 +12,7 @@ class ItemLoader extends Component {
         super(props);
         this.state = {
             GroupsData: {},
+            Gavs: {},
             AllGroupNames: [],
             CurrentGroupTargets: [],
             CurrentTargetData: [],
@@ -80,6 +81,9 @@ class ItemLoader extends Component {
         if (this.props.item_to_load === 'data' || this.props.item_to_load === 'new-data') {
             this.stateDispatcher('DATA_LIST-INIT', this.state.CurrentTargetData)
         }
+        if(this.props.item_to_load === 'g-avs'){
+            this.stateDispatcher('G_AVS_INIT', this.state.Gavs)
+        }
     }
 
 
@@ -105,6 +109,16 @@ class ItemLoader extends Component {
                     itemAlert: iAlert
                 });
             })
+    }
+
+    getGroupAvs(){
+        fetch(serverURL + '/getGroupAvarages')
+        .then(response => response.json())
+        .then(avs => {
+            this.setState({
+                Gavs: avs
+            })
+        })
     }
 
     getTargets() {
@@ -158,6 +172,9 @@ class ItemLoader extends Component {
         }
         if (this.props.item_to_load === 'data' || this.props.item_to_load === 'new-data') {
            this.getData();
+        }
+        if(this.props.item_to_load === 'g-avs'){
+            this.getGroupAvs()
         }
     }
 

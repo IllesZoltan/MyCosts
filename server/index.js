@@ -30,6 +30,12 @@ let GRP = undefined;
 let currGRP_TRG = {};
 let currTRG_DAT = {};
 
+const gAvs = {
+  all: 0,
+  yearly: 0,
+  monthly: 0
+}
+
 let groupList = [];
 let targetList = [];
 let dataList = [];
@@ -203,20 +209,29 @@ app.post('/groupDEL', (req, res) => {
 })
 
 
-app.get('/grpAvarages', (req, res) => {
-  let nr = "";
+app.post('/grpAvarages', (req, res) => {
+  Object.entries(gAvs).forEach(([key, val]) => gAvs[key] = 0);
+  const T_keys = req.body.tarKey;
+  db.serialize(() => {
+    T_keys.forEach(item => {
+      db.all(
+        `SELECT * FROM data WHERE Gid = ${currGRPid.gid} AND Tid = ${item}`,
+        (err, row) => {
+          if (err) { console.error('Group annual avarage-data error: ', err); }
+          row.forEach(element => {
+            gAvs.all += parseInt(JSON.parse(element.Ddata)["price"]);
 
-  // db.all(
-  //   `SELECT * FROM data WHERE Gid = ${currGRPid.gid} AND Tid = ${item.Tid}`,
-  //   (err, row) => {
-  //     if (err) { console.error('Group annual avarage-data error: ', err); }
-  //     annualAvarage = (annualAvarage + parseInt(JSON.parse(row[0].Ddata)["price"])) / dataNr;
-  //     dataNr++;
+          })
+          console.log('srv g av ', gAvs.all);
+        }
+      )
+    })
+  })
+  res.send()
+})
 
-  //   }
-  // )
-
-  res.send(nr)
+app.get('/getGroupAvarages', (req,res) => {
+  res.send(gAvs);
 })
 
 

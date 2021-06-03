@@ -21,10 +21,10 @@ class Infoline extends Component {
         if (val.length > 3) {
             let sliceTime = (val.length - (val.length % 3)) / 3;
             let strLength = val.length - 3;
-            while (sliceTime > 0){
+            while (sliceTime > 0) {
                 retVal = retVal.slice(0, strLength) + "." + retVal.slice(strLength, retVal.length);
                 strLength = strLength - 3;
-                sliceTime --;
+                sliceTime--;
             }
         } else {
             retVal = val
@@ -33,7 +33,7 @@ class Infoline extends Component {
         return retVal
     }
 
-    costAvarages(all, yearly, monthly) {
+    costAvarages(type, all, yearly, monthly) {
         if (all) { all = ' . '.repeat(10) + this.currencyDisplayer(all) }
         if (yearly) { yearly = ' . '.repeat(10) + this.currencyDisplayer(yearly) }
         if (monthly) { monthly = ' . '.repeat(10) + this.currencyDisplayer(monthly) }
@@ -41,33 +41,35 @@ class Infoline extends Component {
             <div className="mon-conts">{`Össz: ${all}`}</div>
             <div className="mon-conts">{`Évi: ${yearly}`}</div>
             <div className="mon-conts">{`Havi: ${monthly}`}</div>
-            <Link to="/item_loader"><div className="mon-conts-btn" >{"Költség Átlag"}</div></Link>
+            <Link to="/item_loader"><div className="mon-conts-btn" onClick={() => {this.dispatcher(type)}} >{"Költség Átlag"}</div></Link>
         </div>
     }
 
     mon1() {
         let retVal = "Csoport: ";
-        let all = "";
-        let yearly = "";
-        let monthly = "";
+        const type = "G-AVARAGE";
+        const all = this.props.GroupAvarages.all;
+        const yearly = this.props.GroupAvarages.yearly;
+        const monthly = this.props.GroupAvarages.monthly;
 
         if (this.props.ActiveGroup) {
             retVal += this.props.ActiveGroup
+            this.groupContent = this.costAvarages(type, all, yearly, monthly);
         }
-        this.groupContent = this.costAvarages(all, yearly, monthly);
 
         return retVal
     }
 
     mon2() {
         let retVal = "Cél: ";
+        const type = "T-AVARAGE";
         let all = "";
         let yearly = "";
         let monthly = "";
-        if (this.props.ActiveGroup) {
+        if (this.props.ActiveTarget) {
             retVal += this.props.ActiveTarget
+            this.targetContent = this.costAvarages(type, all, yearly, monthly)
         }
-        this.targetContent = this.costAvarages(all, yearly, monthly)
 
         return retVal
     }
@@ -76,16 +78,8 @@ class Infoline extends Component {
         return 'Jegyzetek'
     }
 
-    currencyConverter(value) {
-        const val = "" + value
-        let retVal = "";
-        if (val.length > 3) {
-            retVal = val.slice(0, val.length - 3) + "." + val.slice((val.length - 3), val.length) + " Ft"
-        } else {
-            retVal = val + " Ft"
-        }
-
-        return retVal
+    dispatcher(type) {
+        this.props.dispatch({ type: type, value: "" });
     }
 
     render() {

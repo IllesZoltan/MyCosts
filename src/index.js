@@ -29,7 +29,9 @@ class Item {
 
 const initialState = {
   Groups: [],
+  GroupAvarages: { all: "", yearly: "", monthly: "" },
   Targets: [],
+  TargetAvarages: { all: 0, yearly: 0, monthly: 0 },
   Datas: [],
   ActiveGroup: "",
   ActiveTarget: "",
@@ -331,7 +333,7 @@ function reducer(state = initialState, action) {
         body: JSON.stringify(delDataToFetch)
       }
       fetch(serverURL + '/dataDEL', delDataFetchingOptions)
-        .catch(err => console.log('Deleting data error: ', err))
+        .catch(err => console.error('Deleting data error: ', err))
 
       const dataDelState = {
         ...state,
@@ -342,8 +344,27 @@ function reducer(state = initialState, action) {
 
 
     case "G-AVARAGE":
+      const targetsKeys = { tarKey: Object.keys(state.Targets[0]) }
+      const gAvFetchingOptions = {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(targetsKeys)
+      }
+      fetch(serverURL + '/grpAvarages', gAvFetchingOptions)
+        .catch(err => console.error('Group avarages error: ', err))
 
-      return state
+      const gAvState = {
+        ...state,
+        item_to_load: "g-avs"
+      }
+      return gAvState
+
+    case "G_AVS_INIT":
+      const gAvsInitState = {
+        ...state,
+        GroupAvarages: action.value
+      }
+      return gAvsInitState
 
 
 

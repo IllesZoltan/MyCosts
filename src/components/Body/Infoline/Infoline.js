@@ -41,16 +41,16 @@ class Infoline extends Component {
             <div className="mon-conts">{`Össz: ${all}`}</div>
             <div className="mon-conts">{`Évi: ${yearly}`}</div>
             <div className="mon-conts">{`Havi: ${monthly}`}</div>
-            <Link to="/item_loader"><div className="mon-conts-btn" onClick={() => {this.dispatcher(type)}} >{"Költség Átlag"}</div></Link>
+            <Link to="/item_loader"><div className="mon-conts-btn" onClick={() => { this.dispatcher(type) }} >{"Költség Átlag"}</div></Link>
         </div>
     }
 
     mon1() {
         let retVal = "Csoport: ";
         const type = "G-AVARAGE";
-        const all = this.props.GroupAvarages.all;
-        const yearly = this.props.GroupAvarages.yearly;
-        const monthly = this.props.GroupAvarages.monthly;
+        const all = "" + this.props.GroupAvarages.all;
+        const yearly = "" + this.props.GroupAvarages.yearly;
+        const monthly = "" + this.props.GroupAvarages.monthly;
 
         if (this.props.ActiveGroup) {
             retVal += this.props.ActiveGroup

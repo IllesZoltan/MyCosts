@@ -210,8 +210,9 @@ app.post('/groupDEL', (req, res) => {
 
 
 app.post('/grpAvarages', (req, res) => {
-  Object.entries(gAvs).forEach(([key, val]) => gAvs[key] = 0);
+  Object.keys(gAvs).forEach(key => gAvs[key] = 0);
   const T_keys = req.body.tarKey;
+  const dates = [];
   db.serialize(() => {
     T_keys.forEach(item => {
       db.all(
@@ -219,10 +220,22 @@ app.post('/grpAvarages', (req, res) => {
         (err, row) => {
           if (err) { console.error('Group annual avarage-data error: ', err); }
           row.forEach(element => {
+            //A csoport teljes költsége
             gAvs.all += parseInt(JSON.parse(element.Ddata)["price"]);
 
+            //A csoport évi költsége
+            let count = 0;
+            dates.forEach(item => {
+              //if (item === JSOelement.Dd}ataN.parse()["date"]) { count++ 
+            })
+            if (count === 0) { dates.push(JSON.parse(element.Ddata)["date"]) }
+            console.log('srv g av ', dates)
           })
-          console.log('srv g av ', gAvs.all);
+          // datas.forEach(item => {
+          //   row.forEach(el => {
+          //     console.log('srv grpAvarages ',el)
+          //   })
+          // })
         }
       )
     })
@@ -230,7 +243,7 @@ app.post('/grpAvarages', (req, res) => {
   res.send()
 })
 
-app.get('/getGroupAvarages', (req,res) => {
+app.get('/getGroupAvarages', (req, res) => {
   res.send(gAvs);
 })
 

@@ -33,6 +33,13 @@ const initialState = {
   Targets: [],
   TargetAvarages: { all: 0, yearly: 0, monthly: 0 },
   Datas: [],
+  Descriptions: [],
+  DateSelectionWindow: "",
+  SelectedDate: "",
+  TimeSelectionWindow: "",
+  SelectedTime: "",
+  DiscriptionSelectionWindow: "",
+  SelectedDiscription: "Discription selection",
   ActiveGroup: "",
   ActiveTarget: "",
   item_to_load: "group",
@@ -340,6 +347,79 @@ function reducer(state = initialState, action) {
         showPopup: ""
       }
       return dataDelState
+
+
+      
+
+    case 'show-date':
+      let dateDisplayState = { ...state };
+
+      if (action.value === "clear_hide") {
+        dateDisplayState = {
+          ...state,
+          DateSelectionWindow: "",
+          SelectedDate: ""
+        }
+      }
+      if (action.value === "Select_Date") {
+        dateDisplayState = {
+          ...state,
+          DateSelectionWindow: action.value,
+        }
+      }
+      if (action.value === "save_date") {
+        dateDisplayState = {
+          ...state,
+          DateSelectionWindow: "",
+        }
+      }
+      return dateDisplayState
+
+    case 'sel-date':
+      const newDateState = {
+        ...state,
+        SelectedDate: action.value
+      }
+      return newDateState
+
+
+    case 'show-time':
+      let timeDisplayState = { ...state };
+
+      if (action.value === "clear_hide") {
+        timeDisplayState = {
+          ...state,
+          TimeSelectionWindow: "",
+          SelectedTime: ""
+        }
+      }
+      if (action.value === "Select_Time") {
+        timeDisplayState = {
+          ...state,
+          TimeSelectionWindow: action.value,
+        }
+      }
+      if (action.value === "save_time") {
+        timeDisplayState = {
+          ...state,
+          TimeSelectionWindow: "",
+        }
+      }
+      return timeDisplayState
+
+    case 'sel-time':
+      const newTimeState = {
+        ...state,
+        SelectedTime: action.value
+      }
+      return newTimeState
+
+      case 'show-descrpt':
+        const newDescrpt = {
+          ...state
+        }
+
+      return newDescrpt
 
 
 

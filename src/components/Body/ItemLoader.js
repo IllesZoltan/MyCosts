@@ -81,7 +81,7 @@ class ItemLoader extends Component {
         if (this.props.item_to_load === 'data' || this.props.item_to_load === 'new-data') {
             this.stateDispatcher('DATA_LIST-INIT', this.state.CurrentTargetData)
         }
-        if(this.props.item_to_load === 'g-avs'){
+        if (this.props.item_to_load === 'g-avs') {
             this.stateDispatcher('G_AVS_INIT', this.state.Gavs)
         }
     }
@@ -91,17 +91,25 @@ class ItemLoader extends Component {
         this.props.dispatch({ type: typeStr, value: data })
     }
 
+    getDescriptions() {
+        fetch(serverURL + '/getDescriptionList')
+            .then(response => response.json())
+            .then(data => {
+                console.log('Descriptions: ', data.D);
+            })
+    }
+
     getGroups() {
         fetch(serverURL + '/getGroupList')
             .then(response => response.json())
             .then(data => {
                 let iAlert = "";
                 if (Object.entries(data[1]).length === 0) {
-                    iAlert = "Nincs letölthető csoport ..."
-                    this.stateDispatcher('popup', 'NewGroup')
+                    iAlert = "Nincs letölthető csoport ...";
+                    this.stateDispatcher('popup', 'NewGroup');
                 } else {
                     iAlert = data[0];
-                    this.stateDispatcher('popup', '')
+                    this.stateDispatcher('popup', '');
                 }
                 this.setState({
                     GroupsData: data[1],
@@ -111,14 +119,14 @@ class ItemLoader extends Component {
             })
     }
 
-    getGroupAvs(){
+    getGroupAvs() {
         fetch(serverURL + '/getGroupAvarages')
-        .then(response => response.json())
-        .then(avs => {
-            this.setState({
-                Gavs: avs
+            .then(response => response.json())
+            .then(avs => {
+                this.setState({
+                    Gavs: avs
+                })
             })
-        })
     }
 
     getTargets() {
@@ -168,12 +176,13 @@ class ItemLoader extends Component {
             this.getGroups();
         }
         if (this.props.item_to_load === 'target' || this.props.item_to_load === 'new-target' || this.props.item_to_load === 'del-target' || this.props.item_to_load === 'edit-target') {
+            this.getDescriptions();
             this.getTargets();
         }
         if (this.props.item_to_load === 'data' || this.props.item_to_load === 'new-data') {
-           this.getData();
+            this.getData();
         }
-        if(this.props.item_to_load === 'g-avs'){
+        if (this.props.item_to_load === 'g-avs') {
             this.getGroupAvs()
         }
     }

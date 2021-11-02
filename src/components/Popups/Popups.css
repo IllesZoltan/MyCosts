@@ -97,6 +97,61 @@ input{
 .create{
     color: brown;
 }
+.create_standby{
+    color:rgb(201, 211, 211)
+}
 .cancel{
     color: rgb(56, 88, 88);
+}
+
+
+.sel-table{
+    position: absolute;
+    display: inline-flex;
+    
+    background-color: rgb(227, 190, 168);
+    border-radius: 10px;
+    box-shadow: 5px 5px 8px rgb(70, 95, 95);
+    font-size: 12px;
+    z-index: 20px;
+}
+.cont{
+    width: 50px;
+    margin-top: 10px;
+    margin-right: 2px;
+    text-align: center;
+}
+.sel-display{
+    width: 50px;
+    background-color:cornflowerblue;
+}
+.list__{
+    display: none;
+}
+.__list{
+    display: block;
+}
+.list{
+    width: 50px;
+    margin-top: 2px;
+    padding-bottom: 5px;
+    background-color:cornsilk;
+}
+.list div{
+    margin-top: 2px;
+}
+
+.sel-date{
+    width: 160px;
+    height: 40px;
+    margin-top: 15%;
+    margin-left: 50%;
+    padding-left: 8px;
+}
+.sel-time{
+    width: 110px;
+    height: 40px;
+    margin-top: 25%;
+    margin-left: 50%;
+    padding-left: 8px;
 }

@@ -8,7 +8,7 @@ export default class InputPage extends Component {
         return(
             <div className="app-body">
                 <Header />
-                <Body /*newGroup={this.props.Groups[0]}*//>
+                <Body />
             </div>
         )
     }

@@ -54,7 +54,6 @@ class Body extends Component {
                     <GroupSection />
                     <TargetSection />
                     <DataSection />
-
                 </div>
             </div>
         )

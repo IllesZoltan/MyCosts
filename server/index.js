@@ -22,6 +22,10 @@ db.serialize(() => {
     'CREATE TABLE IF NOT EXISTS data ( Gid VARCHAR(150), Tid VARCHAR(150), Did VARCHAR(150), Ddata VARCHAR(300))',  //Ddata = JSON.stringify(dátum, idő, leírás, ár)
     (error) => { console.log('Data creating error: ', error) }
   )
+  db.run(
+    'CREATE TABLE IF NOT EXISTS descrpt ( Gid VARCHAR(150), DscptID INTEGER, Dscpt VARCHAR(200))',
+    (error) => { console.log('Description error: ', error) }
+  )
   //db.close();
 })
 
@@ -29,6 +33,7 @@ db.serialize(() => {
 let GRP = undefined;
 let currGRP_TRG = {};
 let currTRG_DAT = {};
+let currGRP_DESCRPT={};
 
 const gAvs = {
   all: 0,
@@ -39,6 +44,7 @@ const gAvs = {
 let groupList = [];
 let targetList = [];
 let dataList = [];
+let desrptList = [];
 let currGRPid = "";
 let currTRGid = "";
 let currDTAid = "";
@@ -132,12 +138,18 @@ app.use(express.urlencoded({ extended: true }));
 app.post('/groupListInit', (req, res) => {
   GRP = req.body.Glist;
   alert = "";
-  res.send(GRP)
+  res.send(GRP);
+})
+
+app.get('/getDescrpList', (req, res) => {
+  let retStr = {D: "Descriptions download complete!"};
+  res.send(retStr);
 })
 
 /*
 * Az asynchron "SELECT" miatt itt nem lehet megtölteni a GRP-t
 */
+
 app.get('/getGroupList', (req, res) => {
   const groups = {};
   db.serialize(() => {
@@ -262,7 +274,6 @@ app.post('/targetListInit', (req, res) => {
 
 app.get('/getCurrentGroupTargets', (req, res) => {
   const targs = {};
-  let items = [];
   // let annualAvarage = 0;
   // let dataNr = 1;
   db.serialize(() => {
@@ -270,7 +281,6 @@ app.get('/getCurrentGroupTargets', (req, res) => {
       `SELECT * FROM targ WHERE Gid = ${currGRPid.gid}`,
       (err, row) => {
         if (err) { console.error('Target download error: ', err); }
-        items = row;
         row.forEach(item => {
           targs[item.Tid] = item.Tname;
 
@@ -416,6 +426,14 @@ app.post('/dataDEL', (req, res) => {
 
   res.send(delDataID)
 })
+
+
+app.get('/getDescriptionList',(req,res) => {
+  let descrpt = "description from server"
+console.log("Srv. - Getting discription list");
+  res.send(descrpt);
+})
+
 
 
 

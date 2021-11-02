@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import './Popups.css'
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import DateSelection from "./DateSelection";
+import TimeSelection from "./TimeSelection";
 
 
 class NewDataEntry extends Component {
     constructor() {
         super();
-        this.toEdit = true;
         this.inputs = ["Date", "Time", "Description", "Price"];
         this.newInput = "";
         this.state = {
@@ -15,10 +16,51 @@ class NewDataEntry extends Component {
             "time": "",
             "description": "",
             "price": ""
+        };
+        this.fieldAlertBgr = "rgb(250, 178, 178)";
+        this.sendData = false;
+        this.nowActive = false;
+    }
+
+    fieldAlertTxt(placeHolderTxt) {
+        return "Adding " + placeHolderTxt + " required";
+    }
+
+    // sendData() {
+    //     let sendingData = false;
+    //     const stateValues = Object.values(this.state);
+    //     let emptyFields = 4;
+
+    //     for (let i = 1; i < 5; i++) {
+    //         if (!stateValues[i - 1]) {   //-- ha üres a mező
+    //             console.log("newInput " + i);
+    //         } else {
+    //             console.log("field not empty ", i);
+    //         }
+    //     }
+
+    //     if (emptyFields === 0) { sendingData = true }
+    //     return sendingData;
+    // }
+
+
+    enableToSend(nr) {
+        let filledFields = 0;
+        for (let i = 1; i < 5; i++) {
+            if (document.getElementById("newInput" + i).value !== "") {
+                filledFields++;
+            }
+        }
+        if (filledFields === 4) {
+            this.sendData = true;
+        } else {
+            this.sendData = false;
         }
     }
 
+
     handleInputChange(e) {
+
         if (e.target.value) {
             this.newInput = e.target.value + e.target.placeholder
         } else {
@@ -26,89 +68,116 @@ class NewDataEntry extends Component {
         }
     }
 
-    // ON_CLICK
-    validityCheck(e) {
-        let fieldNrPreCheck = parseInt(e.target.id.slice(e.target.id.length - 1, e.target.id.length))
-        const prevEnteredValues = Object.values(this.state)
 
+    changeFieldProperty(editable, fieldNR) {
+        let fieldID = document.getElementById("newInput" + fieldNR);
 
-        if (document.getElementById('newInput' + fieldNrPreCheck).disabled === false) {
-            console.log('NDE onclick ', e.target.placeholder, ' - ', fieldNrPreCheck, '  >  top empty field: ', prevEnteredValues.indexOf("") + 1);
-
-            if (e.target.value) {
-                this.newInput = e.target.value + e.target.placeholder
-            } else {
-                this.newInput = ""
+        if (editable) {
+            for (let i = 1; i < 5; i++) {
+                document.getElementById('newInput' + i).disabled = editable
             }
-
-
-            if (this.toEdit) {
-                if (prevEnteredValues.indexOf("") > -1) {  //-- ha van üres field
-                    if ((prevEnteredValues.indexOf("") + 1) !== fieldNrPreCheck) {  //-- ha nem az az üres field, amelyikre rá lett kattintva
-                        for (let i = 1; i < 5; i++) {
-                            document.getElementById('newInput' + i).disabled = true
-                        }
-
-                        
-                        document.getElementById('newInput' + (prevEnteredValues.indexOf("") + 1)).disabled = false
-                        document.getElementById('newInput' + (prevEnteredValues.indexOf("") + 1)).style.backgroundColor = "red"
-                        document.getElementById('newInput' + (prevEnteredValues.indexOf("") + 1)).focus()
-                        document.getElementById('newInput' + (prevEnteredValues.indexOf("") + 1)).select()
-                        //this.toEdit = false;
-                        console.log('NDE empty field style: ',document.getElementById('newInput' + (prevEnteredValues.indexOf("") + 1)).style.backgroundColor);
-                    }
-                }
-            }
-
-            //     if (!enteredValues[fieldNrPreCheck - 2]) {
-            //         console.log('NDE alarm !', this.inputs[fieldNrPreCheck - 2]);
-            //         for (let i = 1; i < 5; i++) {
-            //             if (i === (fieldNrPreCheck - 1)) {
-            //                 document.getElementById('newInput' + i).focus = true;
-            //                 document.getElementById('newInput' + i).disabled = false;
-            //                 document.getElementById('newInput' + i).style.backgroundColor = "red"
-            //             } else {
-            //                 document.getElementById('newInput' + i).disabled = true
-            //             }
-            //         }
-            //         //document.getElementById('newInput' + (fieldNrPreCheck - 1)).disabled = false
-            //         //document.getElementById('newInput' + (fieldNrPreCheck - 1)).style.backgroundColor = "red"
-            //     }
-
-            //     console.log('NDE validity ', fieldNrPreCheck - 2, this.newInput, enteredValues, enteredValues[fieldNrPreCheck - 2]);
-            //}
+            fieldID.disabled = !editable
+            fieldID.style.backgroundColor = this.fieldAlertBgr
+            fieldID.placeholder = this.fieldAlertTxt(fieldID.placeholder)
+            fieldID.focus()
+            fieldID.select()
+        } else {
+            fieldID.placeholder = this.inputs[fieldNR - 1];
+            fieldID.disabled = editable;
+            fieldID.style.backgroundColor = "white";
         }
     }
 
+    // ON_CLICK
+    checkAll() {
 
+        //-- minden mező aktív állapotba helyezése
+        for (let i = 1; i < 5; i++) {
+            this.changeFieldProperty(false, i);
+        }
 
-    // ON_BLURE
-    updateState(e, type) {
-        // let fieldNrPostCheck = parseInt(e.target.id.slice(e.target.id.length - 1, e.target.id.length))
-        // const postEnteredValues = Object.values(this.state)
-        // console.log('NDE post ', type, fieldNrPostCheck);
-        // if (e.target.value) {
-        //     this.newInput = e.target.value + e.target.placeholder
-        //     document.getElemenytById('newInput' + fieldNrPostCheck).style.backgroundColor = "white"
-        // } else {
-        //     this.newInput = "";
-        //     document.getElementById('newInput' + fieldNrPostCheck).style.backgroundColor = "red"
-        // }
-        if (e.target.value) {
+    }
+
+    checkClicked(fieldNrCheck) {
+        const enteredValues = Object.values(this.state);
+
+        //-- mező ellenőrzése
+        if (enteredValues.indexOf("") > -1) {  //-- ha van üres mező
+            if ((enteredValues.indexOf("") + 1) !== fieldNrCheck) {  //-- ha nem az az üres mező, amelyikre rá lett kattintva
+                this.changeFieldProperty(true, (enteredValues.indexOf("") + 1))
+            }
+        } else {
             for (let i = 1; i < 5; i++) {
-                document.getElementById('newInput' + i).disabled = false;
-                document.getElementById('newInput' + i).style.backgroundColor = "white"
+                this.changeFieldProperty(false, i);
             }
         }
-        // else {
-        //     e.target.style.backgroundColor = "red"
-        //     for (let i = 1; i < 5; i++) {
-        //         if (i !== fieldNrPostCheck) {
-        //             document.getElementById('newInput' + i).disabled = true;
-        //             //document.getElementById('newInput' + i).style.backgroundColor = "white"
-        //         }
-        //     }
-        // }
+        this.enableToSend(fieldNrCheck);
+    }
+
+    // markAllEmpty() {
+
+    //     //if (this.nowActive) {
+    //     if (document.getElementById("newInput1").value !== "") {
+    //         for (let i = 1; i < 5; i++) {
+    //             if (document.getElementById("newInput" + i).value === "") {
+    //                 document.getElementById("newInput" + i).disabled = false
+    //                 document.getElementById("newInput" + i).style.backgroundColor = this.fieldAlertBgr
+    //                 document.getElementById("newInput" + i).placeholder = this.fieldAlertTxt(document.getElementById("newInput" + i).placeholder)
+    //             }
+    //         }
+    //     }
+    //     //}
+    // }
+
+    validityCheck(fieldNrCheck) {
+
+        if (!document.getElementById("newInput" + fieldNrCheck).disabled) {
+            if (fieldNrCheck === 1) {
+                if (document.getElementById("newInput" + fieldNrCheck).value === "") {
+                    this.dispatchToState('show-date', "Select_Date");
+                } else {
+                    if (this.sendData) {
+                        this.dispatchToState('show-date', "Select_Date");
+                    }
+                }
+            }
+            else { this.dispatchToState('show-date', "save_date"); }
+
+            if (fieldNrCheck === 2) {
+                if (document.getElementById("newInput" + fieldNrCheck).value === "") {
+                    this.dispatchToState('show-time', "Select_Time");
+                } else {
+                    if (this.sendData) {
+                        this.dispatchToState('show-time', "Select_Time");
+                    }
+                }
+            }
+            else { this.dispatchToState('show-time', "save_time"); }
+
+            if(fieldNrCheck===3){
+                this.dispatchToState('show-descr', "Select-Description");
+            }
+        }
+
+        this.checkAll();
+        this.checkClicked(fieldNrCheck);
+
+
+        this.setState({
+            ...this.state
+        })
+    }
+
+    // ON_BLURE
+    updateState(e, type, nr) {
+
+        if (e.target.value) {
+            this.newInput = e.target.value + e.target.placeholder;
+        } else {
+            this.newInput = "";
+        }
+
+        this.enableToSend(nr);
 
         this.setState({
             ...this.state,
@@ -116,24 +185,51 @@ class NewDataEntry extends Component {
         })
     }
 
-    handleSubmit = () => {
-        //console.log('new data ',this.state);
-        let isEmptyCheck = false;
-        Object.entries(this.state).forEach(([key, val]) => {
-            if (val === "") {
-                isEmptyCheck = true
-                console.log('NDE ' + key + ' is empty!');
-            }
-        })
-        if (!isEmptyCheck) {
-            this.dispatchToState("ADD-DATA", this.state);
-        } else {
-            console.log('NewDataEntry empty fields!');
+    dateSel() {
+        let dateWin;
+        if (this.props.DateSelectionWindow === "Select_Date") {
+            dateWin = <DateSelection />
         }
+        return dateWin;
+    }
+
+    timeSel() {
+        let timeWin;
+        if (this.props.TimeSelectionWindow === "Select_Time") {
+            timeWin = <TimeSelection />
+        }
+        return timeWin;
+    }
+
+
+    handleSubmit = () => {
+
+
+
+
+        console.log('new data ', this.state);
+        // let isEmptyCheck = false;
+        // Object.entries(this.state).forEach(([key, val]) => {
+        //     if (val === "") {
+        //         isEmptyCheck = true
+        //         console.log('NDE ' + key + ' is empty!');
+        //     }
+        // })
+        // if (!isEmptyCheck) {
+        //     this.dispatchToState("ADD-DATA", this.state);
+        // } else {
+        //     console.log('NewDataEntry empty fields!');
+        // }
+    }
+
+    getDescList(){
+console.log("NDE getting description list");
     }
 
     hidePopup() {
         this.dispatchToState('popup', "");
+        this.dispatchToState('show-date', "clear_hide");
+        this.dispatchToState('show-time', "clear_hide");
     }
 
     dispatchToState(type, value) {
@@ -142,23 +238,30 @@ class NewDataEntry extends Component {
 
     createBtn() {
         let btn;
-        if (this.state["date"]) {
+        if (this.sendData) {
             btn = <Link to="/item_loader"><div className="new-btns create" onClick={() => this.handleSubmit()} >Create</div></Link>
+            this.checkAll()
         } else {
-            btn = <Link to="/loaded_items"><div className="new-btns create" onClick={() => this.hidePopup()} >Create</div></Link>
+            btn = <Link to="/loaded_items"><div className="new-btns create_standby" >Create</div></Link>
         }
         return btn
+    }
+
+    componentDidMount(){
+        this.getDescList();
     }
 
     render() {
         return (
             <div className="new-cont">
+                {this.dateSel()}
+                {this.timeSel()}
                 <div className="new-title">{'Enter new ' + this.props.title}</div>
-                <div className="new-input new-data-input">
-                    <input id="newInput1" name="newInput1" placeholder={this.inputs[0]} onClick={e => { this.validityCheck(e) }} onChange={e => { this.handleInputChange(e) }} onBlur={e => { this.updateState(e, 'date') }} />
-                    <input id="newInput2" name="newInput2" placeholder={this.inputs[1]} onClick={e => { this.validityCheck(e) }} onChange={e => { this.handleInputChange(e) }} onBlur={e => { this.updateState(e, 'time') }} />
-                    <input id="newInput3" name="newInput3" placeholder={this.inputs[2]} onClick={e => { this.validityCheck(e) }} onChange={e => { this.handleInputChange(e) }} onBlur={e => { this.updateState(e, 'description') }} />
-                    <input id="newInput4" name="newInput4" placeholder={this.inputs[3]} onClick={e => { this.validityCheck(e) }} onChange={e => { this.handleInputChange(e) }} onBlur={e => { this.updateState(e, 'price') }} />
+                <div className="new-input">
+                    <Link to="/loaded_items"><input id="newInput1" name="newInput1" placeholder={this.inputs[0]} value={this.props.SelectedDate} onClick={() => { this.validityCheck(1) }} onChange={e => { this.handleInputChange(e) }} onBlur={e => { this.updateState(e, "date", 1) }} autoComplete="off" /></Link>
+                    <Link to="/loaded_items"><input id="newInput2" name="newInput2" placeholder={this.inputs[1]} value={this.props.SelectedTime} onClick={() => { this.validityCheck(2) }} onChange={e => { this.handleInputChange(e) }} onBlur={e => { this.updateState(e, "time", 2) }} autoComplete="off" /></Link>
+                    <Link to="/loaded_items"><input id="newInput3" name="newInput3" placeholder={this.inputs[2]} value={"//"} onClick={e => { this.validityCheck(3) }} onChange={e => { this.handleInputChange(e) }} onBlur={e => { this.updateState(e, "description", 3) }} autoComplete="off" /></Link>
+                    <input id="newInput4" name="newInput4" placeholder={this.inputs[3]} onClick={e => { this.validityCheck(4) }} onChange={e => { this.handleInputChange(e) }} onBlur={e => { this.updateState(e, "price", 4) }} autoComplete="off" />
                 </div>
                 <div className="btn-ribbon">
                     {this.createBtn()}

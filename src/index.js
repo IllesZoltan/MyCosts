@@ -38,8 +38,9 @@ const initialState = {
   SelectedDate: "",
   TimeSelectionWindow: "",
   SelectedTime: "",
-  DiscriptionSelectionWindow: "",
-  SelectedDiscription: "Discription selection",
+  DescriptionSelectionWindow: "",
+  SelectedDescription: "",
+  descPopupWin: "",
   ActiveGroup: "",
   ActiveTarget: "",
   item_to_load: "group",
@@ -349,10 +350,10 @@ function reducer(state = initialState, action) {
       return dataDelState
 
 
-      
+
 
     case 'show-date':
-      let dateDisplayState = { ...state };
+      let dateDisplayState = {};
 
       if (action.value === "clear_hide") {
         dateDisplayState = {
@@ -365,6 +366,8 @@ function reducer(state = initialState, action) {
         dateDisplayState = {
           ...state,
           DateSelectionWindow: action.value,
+          TimeSelectionWindow: "",
+          DescriptionSelectionWindow: ""
         }
       }
       if (action.value === "save_date") {
@@ -384,7 +387,7 @@ function reducer(state = initialState, action) {
 
 
     case 'show-time':
-      let timeDisplayState = { ...state };
+      let timeDisplayState = {};
 
       if (action.value === "clear_hide") {
         timeDisplayState = {
@@ -397,6 +400,8 @@ function reducer(state = initialState, action) {
         timeDisplayState = {
           ...state,
           TimeSelectionWindow: action.value,
+          DateSelectionWindow: "",
+          DescriptionSelectionWindow: ""
         }
       }
       if (action.value === "save_time") {
@@ -414,12 +419,57 @@ function reducer(state = initialState, action) {
       }
       return newTimeState
 
-      case 'show-descrpt':
-        const newDescrpt = {
-          ...state
-        }
 
-      return newDescrpt
+
+    case 'show-descrpt':
+      let descrptDisplayState = {};
+
+      if (action.value === "clear_hide") {
+        descrptDisplayState = {
+          ...state,
+          DescriptionSelectionWindow: "",
+          SelectedDescription: ""
+        }
+      }
+      if (action.value === "Select_Description") {
+        descrptDisplayState = {
+          ...state,
+          DescriptionSelectionWindow: action.value,
+          DateSelectionWindow: "",
+          TimeSelectionWindow: "",
+        }
+      }
+
+      if (action.value === "save_descrpt") {
+        descrptDisplayState = {
+          ...state,
+          DescriptionSelectionWindow: ""
+        }
+      }
+      return descrptDisplayState
+
+    case 'sel-descrpt':
+      const newDescriptionState = {
+        ...state,
+        SelectedDescription: action.value
+      }
+      return newDescriptionState
+
+    case 'descrptINIT':
+      let descrptInitState = {
+        ...state,
+        Descriptions: action.value
+      }
+      return descrptInitState
+
+    case 'hideALLsel':
+      const allSelHide = {
+        ...state,
+        DateSelectionWindow: "",
+        TimeSelectionWindow: "",
+        DescriptionSelectionWindow: ""
+      }
+      return allSelHide
 
 
 
@@ -455,6 +505,13 @@ function reducer(state = initialState, action) {
         showPopup: action.value
       }
       return popupState
+
+    case "descPopup":
+      const descPopupState = {
+        ...state,
+        descPopupWin: action.value
+      }
+      return descPopupState
 
     case "alert":
       const data = {}

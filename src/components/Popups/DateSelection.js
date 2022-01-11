@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom';
+//import './Popups.css';
 
 class DateSelection extends Component {
     constructor() {
@@ -29,9 +30,10 @@ class DateSelection extends Component {
     }
 
     yearSelection() {
-        const years = []
+        const years = [];
+        const currentYear = new Date().getFullYear();
         if (this.state.yToSel) {
-            for (let i = 2021; i < 2041; i++) {
+            for (let i = 2018; i < currentYear + 5; i++) {
                 years.push(<div key={i + 100} onClick={e => this.ySelected(e)}>{i}</div>)
             }
         }
@@ -42,7 +44,7 @@ class DateSelection extends Component {
         document.getElementById("yy").innerText = e.target.innerText;
         document.getElementById("y_list").className = "list__"
     }
-    
+
     //--MONTH
     selMonth() {
         document.getElementById("m_list").className = "__list list";
@@ -106,12 +108,21 @@ class DateSelection extends Component {
         this.dispatcher('show-date', "save_date");
     }
 
+    hideSel(){
+        console.log("date blured!");
+        this.dispatcher('hideALLsel',"");
+    }
+
+    componentDidMount(){
+        document.getElementById("date0").focus();
+        //document.getElementById("date0").select();
+    }
 
 
 
     render() {
         return (
-            <div className="sel-date sel-table">
+            <div id="date0" className="sel-date sel-table">
                 <div className="cont">
                     <div id="yy" className="sel-display" onClick={() => this.selYear()}>2021</div>
                     <div id="y_list" className="list__">{this.yearSelection()}</div>

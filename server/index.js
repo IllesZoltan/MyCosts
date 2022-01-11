@@ -44,7 +44,7 @@ const gAvs = {
 let groupList = [];
 let targetList = [];
 let dataList = [];
-let desrptList = [];
+let descrptList = [];
 let currGRPid = "";
 let currTRGid = "";
 let currDTAid = "";
@@ -66,6 +66,14 @@ function groupAvailability(valToCheck) {
     GRP = undefined
   }
   return checkedOK;
+}
+
+function descAvailability(valToCheck){
+  let descChecked = false;
+  if (currGRP_DESCRPT !== {}){
+    
+  }
+  return descChecked;
 }
 
 function targetAvailability(valToCheck) {
@@ -141,10 +149,7 @@ app.post('/groupListInit', (req, res) => {
   res.send(GRP);
 })
 
-app.get('/getDescrpList', (req, res) => {
-  let retStr = {D: "Descriptions download complete!"};
-  res.send(retStr);
-})
+
 
 /*
 * Az asynchron "SELECT" miatt itt nem lehet megtölteni a GRP-t
@@ -269,7 +274,16 @@ app.post('/getCurrentGroup', (req, res) => {
 app.post('/targetListInit', (req, res) => {
   currGRP_TRG[currGRPid.gid] = req.body.Tlist;
   alert = "";
-  res.send()
+  res.send(currGRP_TRG)
+})
+
+app.get('/getDescriptionList',(req,res) => {
+    let descrpt = {}
+    descrptList=descrpt.D
+    res.send(descrptList);
+  })
+app.post('/descrptListInit',(req,res) => {
+
 })
 
 app.get('/getCurrentGroupTargets', (req, res) => {
@@ -428,11 +442,10 @@ app.post('/dataDEL', (req, res) => {
 })
 
 
-app.get('/getDescriptionList',(req,res) => {
-  let descrpt = "description from server"
-console.log("Srv. - Getting discription list");
-  res.send(descrpt);
-})
+// app.get('/getDescriptionList',(req,res) => {
+//   let descrpt = {D:["description", "from", "server"]}
+//   res.send(descrpt);
+// })
 
 
 

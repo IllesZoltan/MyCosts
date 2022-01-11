@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import './Popups.css'
+import './Popups.css';
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import DateSelection from "./DateSelection";
 import TimeSelection from "./TimeSelection";
+import DescriptionSelection from "./DescriptionSelection";
 
 
 class NewDataEntry extends Component {
@@ -62,7 +63,7 @@ class NewDataEntry extends Component {
     handleInputChange(e) {
 
         if (e.target.value) {
-            this.newInput = e.target.value + e.target.placeholder
+            this.newInput = e.target.value
         } else {
             this.newInput = "";
         }
@@ -139,9 +140,9 @@ class NewDataEntry extends Component {
                     if (this.sendData) {
                         this.dispatchToState('show-date', "Select_Date");
                     }
+                    else { this.dispatchToState('show-date', "save_date"); }
                 }
             }
-            else { this.dispatchToState('show-date', "save_date"); }
 
             if (fieldNrCheck === 2) {
                 if (document.getElementById("newInput" + fieldNrCheck).value === "") {
@@ -150,12 +151,23 @@ class NewDataEntry extends Component {
                     if (this.sendData) {
                         this.dispatchToState('show-time', "Select_Time");
                     }
+                    else { this.dispatchToState('show-time', "save_time"); }
                 }
             }
-            else { this.dispatchToState('show-time', "save_time"); }
 
-            if(fieldNrCheck===3){
-                this.dispatchToState('show-descr', "Select-Description");
+            if (fieldNrCheck === 3) {
+                if (document.getElementById("newInput" + fieldNrCheck).value === "") {
+                    this.dispatchToState('show-descrpt', "Select_Description");
+                } else {
+                    if (this.sendData) {
+                        this.dispatchToState('show-descrpt', "Select_Description");
+                    }
+                    else { this.dispatchToState('show-descrpt', "save_descrpt"); }
+                }
+            }
+
+            if (fieldNrCheck === 4) {
+                this.dispatchToState('hideALLsel', "")
             }
         }
 
@@ -170,9 +182,8 @@ class NewDataEntry extends Component {
 
     // ON_BLURE
     updateState(e, type, nr) {
-
         if (e.target.value) {
-            this.newInput = e.target.value + e.target.placeholder;
+            this.newInput = e.target.value;
         } else {
             this.newInput = "";
         }
@@ -201,13 +212,24 @@ class NewDataEntry extends Component {
         return timeWin;
     }
 
+    descrptSel() {
+        let descrptWin;
+        if (this.props.DescriptionSelectionWindow === "Select_Description") {
+            descrptWin = <DescriptionSelection />
+        }
+        return descrptWin;
+    }
+
 
     handleSubmit = () => {
 
 
+        this.hidePopup();
 
+        //console.log('new data ', this.state);
 
-        console.log('new data ', this.state);
+        this.dispatchToState("ADD-DATA", this.state);
+
         // let isEmptyCheck = false;
         // Object.entries(this.state).forEach(([key, val]) => {
         //     if (val === "") {
@@ -222,14 +244,21 @@ class NewDataEntry extends Component {
         // }
     }
 
-    getDescList(){
-console.log("NDE getting description list");
+    //     getDescList(){
+    // console.log("NDE getting description list");
+    //     }
+
+    hideInnerPopups() {
+        if (this.dateSel() || this.timeSel() || this.descrptSel()) {
+            this.dispatchToState('hideALLsel', "");
+        }
     }
 
     hidePopup() {
         this.dispatchToState('popup', "");
         this.dispatchToState('show-date', "clear_hide");
         this.dispatchToState('show-time', "clear_hide");
+        this.dispatchToState('show-descrpt', "clear_hide");
     }
 
     dispatchToState(type, value) {
@@ -247,23 +276,24 @@ console.log("NDE getting description list");
         return btn
     }
 
-    componentDidMount(){
-        this.getDescList();
-    }
+    // componentDidMount(){
+    //     this.getDescList();
+    // }
 
     render() {
         return (
             <div className="new-cont">
                 {this.dateSel()}
                 {this.timeSel()}
-                <div className="new-title">{'Enter new ' + this.props.title}</div>
-                <div className="new-input">
+                {this.descrptSel()}
+                <div className="new-title" onClick={() => this.hideInnerPopups()}>{'Enter new ' + this.props.title}</div>
+                <div className="new-input" onClick={() => this.hideInnerPopups()}>
                     <Link to="/loaded_items"><input id="newInput1" name="newInput1" placeholder={this.inputs[0]} value={this.props.SelectedDate} onClick={() => { this.validityCheck(1) }} onChange={e => { this.handleInputChange(e) }} onBlur={e => { this.updateState(e, "date", 1) }} autoComplete="off" /></Link>
                     <Link to="/loaded_items"><input id="newInput2" name="newInput2" placeholder={this.inputs[1]} value={this.props.SelectedTime} onClick={() => { this.validityCheck(2) }} onChange={e => { this.handleInputChange(e) }} onBlur={e => { this.updateState(e, "time", 2) }} autoComplete="off" /></Link>
-                    <Link to="/loaded_items"><input id="newInput3" name="newInput3" placeholder={this.inputs[2]} value={"//"} onClick={e => { this.validityCheck(3) }} onChange={e => { this.handleInputChange(e) }} onBlur={e => { this.updateState(e, "description", 3) }} autoComplete="off" /></Link>
+                    <Link to="/loaded_items"><input id="newInput3" name="newInput3" placeholder={this.inputs[2]} value={this.props.SelectedDescription} onClick={() => { this.validityCheck(3) }} onChange={e => { this.handleInputChange(e) }} onBlur={e => { this.updateState(e, "description", 3) }} autoComplete="off" /></Link>
                     <input id="newInput4" name="newInput4" placeholder={this.inputs[3]} onClick={e => { this.validityCheck(4) }} onChange={e => { this.handleInputChange(e) }} onBlur={e => { this.updateState(e, "price", 4) }} autoComplete="off" />
                 </div>
-                <div className="btn-ribbon">
+                <div className="btn-ribbon" onClick={() => this.hideInnerPopups()}>
                     {this.createBtn()}
                     <Link to="/loaded_items"><div className="new-btns cancel" onClick={() => this.hidePopup()}>Cancel</div></Link>
                 </div>

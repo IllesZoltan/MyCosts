@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom';
+//import './Popups.css';
 
 class TimeSelection extends Component {
     constructor() {
@@ -56,7 +57,7 @@ class TimeSelection extends Component {
         const minutes = []
         if (this.state.minToSel) {
             for (let i = 0; i < 60; i++) {
-                if (i > 0 && i % 5 === 0) {
+                if (i % 5 === 0) {
                     if (i < 10) { i = "0" + i }
                     minutes.push(<Link to="/loaded_items" key={i + 300}><div key={i + 100} onClick={e => this.minSelected(e)}>{i}</div></Link>)
                 }

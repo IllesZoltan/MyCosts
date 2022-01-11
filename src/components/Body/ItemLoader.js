@@ -16,6 +16,7 @@ class ItemLoader extends Component {
             AllGroupNames: [],
             CurrentGroupTargets: [],
             CurrentTargetData: [],
+            CurrentGroupDescriptions: [],
             itemAlert: ""
         }
     }
@@ -91,14 +92,6 @@ class ItemLoader extends Component {
         this.props.dispatch({ type: typeStr, value: data })
     }
 
-    getDescriptions() {
-        fetch(serverURL + '/getDescriptionList')
-            .then(response => response.json())
-            .then(data => {
-                console.log('Descriptions: ', data.D);
-            })
-    }
-
     getGroups() {
         fetch(serverURL + '/getGroupList')
             .then(response => response.json())
@@ -125,6 +118,18 @@ class ItemLoader extends Component {
             .then(avs => {
                 this.setState({
                     Gavs: avs
+                })
+            })
+    }
+
+    getDescriptions() {
+        fetch(serverURL + '/getDescriptionList')
+            .then(response => response.json())
+            .then(data => {
+                console.log('descrpt list: ', data);
+                this.stateDispatcher('descrptINIT', data)
+                this.setState({
+                    CurrentGroupDescriptions: data
                 })
             })
     }
@@ -176,7 +181,6 @@ class ItemLoader extends Component {
             this.getGroups();
         }
         if (this.props.item_to_load === 'target' || this.props.item_to_load === 'new-target' || this.props.item_to_load === 'del-target' || this.props.item_to_load === 'edit-target') {
-            this.getDescriptions();
             this.getTargets();
         }
         if (this.props.item_to_load === 'data' || this.props.item_to_load === 'new-data') {
@@ -184,6 +188,9 @@ class ItemLoader extends Component {
         }
         if (this.props.item_to_load === 'g-avs') {
             this.getGroupAvs()
+        }
+        if (this.props.item_to_load === 'target') {  //--Amikor egy csoportra rá van kattintva
+            this.getDescriptions();
         }
     }
 

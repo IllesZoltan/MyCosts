@@ -33,7 +33,7 @@ db.serialize(() => {
 let GRP = undefined;
 let currGRP_TRG = {};
 let currTRG_DAT = {};
-let currGRP_DESCRPT={};
+let currGRP_DESCRPT = {};
 
 const gAvs = {
   all: 0,
@@ -68,10 +68,14 @@ function groupAvailability(valToCheck) {
   return checkedOK;
 }
 
-function descAvailability(valToCheck){
+function descrptAvailability(valToCheck) {
   let descChecked = false;
-  if (currGRP_DESCRPT !== {}){
-    
+  if (currGRP_DESCRPT !== {}) {
+    Object.values(currGRP_DESCRPT).forEach(itm => {
+      if (itm === valToCheck) {
+        descChecked = true;
+      }
+    })
   }
   return descChecked;
 }
@@ -277,13 +281,42 @@ app.post('/targetListInit', (req, res) => {
   res.send(currGRP_TRG)
 })
 
-app.get('/getDescriptionList',(req,res) => {
-    let descrpt = {}
-    descrptList=descrpt.D
-    res.send(descrptList);
+app.get('/getDescriptionList', (req, res) => {
+  let descrpt = []
+  db.serialize(() => {
+    db.all(
+      `SELECT * FROM descrpt WHERE Gid = ${currGRPid.gid}`,
+      (err, row) => {
+        if (err) { console.error('Description download error: ', err) }
+        if (row) {
+          row.forEach((item, idx) => {
+            descrpt[idx] = item
+            descrptList.push(item.Dscpt)
+          })
+          res.send(descrpt);
+        }
+      }
+      )
   })
-app.post('/descrptListInit',(req,res) => {
-
+})
+// app.post('/descrptListInit',(req,res) => {
+//   let a=1;
+//   res.send(a)
+// })
+app.post('/addNewDescrpt', (req, res) => {
+  Object.entries(req.body).forEach(([key, value]) => {
+    console.log('srv addDescrpt ', key, value);
+    const descrptAvailable = descrptAvailability(value);
+    if (!descrptAvailable) {
+      db.serialize(() => {
+        db.run(
+          `INSERT INTO descrpt VALUES ('${currGRPid.gid}','${key}','${value}')`,
+          (err) => { console.error('New description error: ', err) }
+        )
+      })
+    }
+  })
+  res.send(req.body);
 })
 
 app.get('/getCurrentGroupTargets', (req, res) => {

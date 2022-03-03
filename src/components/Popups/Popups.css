@@ -167,19 +167,24 @@ input{
 
 .sel-desc{
     display: block;
+    width: 100px;
     margin-top: 35%;
     margin-left: 50%;
     padding: 10px;
     background-color: rgb(255, 255, 255);
     border: 1px solid black;
 }
+.sel-desc-title{
+    font-size: 14px;
+}
 .desc-header{
+    display: inline-flex;
     height: 15px;
-    margin-bottom: 6px;
+    margin-bottom: 15px;
     font-size: 8px;
 }
 .desc-headr-img{
-    width: 15px;
+    width: 18px;
     margin-left: 60%;
 }
 .desc-item{
@@ -211,7 +216,7 @@ input{
 }
 .desc-title{
     height: 40px;
-    font-size: 16px;
+    font-size: 14px;
 }
 .new-desc{
     display: inline-flex;

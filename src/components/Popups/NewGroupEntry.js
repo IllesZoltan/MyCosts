@@ -14,7 +14,12 @@ class NewGroupEntry extends Component {
     }
 
     handleInputChange(e) {
-        this.newInput = e.target.value
+        this.newInput = e.target.value;
+        if(this.newInput.length === 3){
+            this.setState({
+                input: this.newInput
+            })
+        }
     }
 
     updateState(e) {
@@ -40,7 +45,7 @@ class NewGroupEntry extends Component {
         if (this.state.input) {
             btn = <Link to="/item_loader"><div className="new-btns create" onClick={() => this.handleSubmit()} >Create</div></Link>
         } else {
-            btn = <Link to="/loaded_items"><div className="new-btns create" onClick={() => this.hidePopup()} >Create</div></Link>
+            btn = <Link to="/loaded_items"><div className="new-btns create_standby" >Create</div></Link>
         }
         return btn
     }

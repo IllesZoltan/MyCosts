@@ -32,55 +32,102 @@ class ItemLoader extends Component {
 
     infoText() {
         let infos = "";
-        if (this.props.item_to_load === 'group') {
-            this.state.itemAlert === "" ? infos = '\nCsoport lista betöltése ...' : infos = this.state.itemAlert
-        }
-        if (this.props.item_to_load === 'new-grp') {
-            this.state.itemAlert === "" ? infos = '\nÚj csoport mentése ...' : infos = this.state.itemAlert
-        }
-        if (this.props.item_to_load === 'edit-grp') {
-            this.state.itemAlert === "" ? infos = '\nCsoport módosítva ...' : infos = this.state.itemAlert
-        }
-        if (this.props.item_to_load === 'del-grp') {
-            this.state.itemAlert === "" ? infos = '\nCsoport törölve ...' : infos = this.state.itemAlert
-        }
+        // if (this.props.item_to_load === 'group') {
+        //     this.state.itemAlert === "" ? infos = '\nCsoport lista betöltése ...' : infos = this.state.itemAlert
+        // }
+        // if (this.props.item_to_load === 'new-grp') {
+        //     this.state.itemAlert === "" ? infos = '\nÚj csoport mentése ...' : infos = this.state.itemAlert
+        // }
+        // if (this.props.item_to_load === 'edit-grp') {
+        //     this.state.itemAlert === "" ? infos = '\nCsoport módosítva ...' : infos = this.state.itemAlert
+        // }
+        // if (this.props.item_to_load === 'del-grp') {
+        //     this.state.itemAlert === "" ? infos = '\nCsoport törölve ...' : infos = this.state.itemAlert
+        // }
 
-        if (this.props.item_to_load === 'target') {
-            this.state.itemAlert === "" ? infos = `${this.props.ActiveGroup}\n\n célok betöltése ...` : infos = this.state.itemAlert
-        }
-        if (this.props.item_to_load === 'new-trg') {
-            this.state.itemAlert === "" ? infos = `${this.props.ActiveGroup}\n\n új cél mentése ...` : infos = this.state.itemAlert
-        }
-        if (this.props.item_to_load === 'del-trg') {
-            infos = `Csoport: ${this.props.ActiveGroup}\n\n cél törlése ...`
-        }
-        if (this.props.item_to_load === 'edit-trg') {
-            infos = `Csoport: ${this.props.ActiveGroup}\n\n cél módosítva ...`
-        }
+        // if (this.props.item_to_load === 'target') {
+        //     this.state.itemAlert === "" ? infos = `${this.props.ActiveGroup}\n\n célok betöltése ...` : infos = this.state.itemAlert
+        // }
+        // if (this.props.item_to_load === 'new-trg') {
+        //     this.state.itemAlert === "" ? infos = `${this.props.ActiveGroup}\n\n új cél mentése ...` : infos = this.state.itemAlert
+        // }
+        // if (this.props.item_to_load === 'del-trg') {
+        //     infos = `Csoport: ${this.props.ActiveGroup}\n\n cél törlése ...`
+        // }
+        // if (this.props.item_to_load === 'edit-trg') {
+        //     infos = `Csoport: ${this.props.ActiveGroup}\n\n cél módosítva ...`
+        // }
 
-        if (this.props.item_to_load === 'data') {
-            this.state.itemAlert === "" ? infos = `${this.props.ActiveGroup}: -${this.props.ActiveTarget}\n\n adatok betöltése ...` : infos = this.state.itemAlert
+        // if (this.props.item_to_load === 'data') {
+        //     this.state.itemAlert === "" ? infos = `${this.props.ActiveGroup}: -${this.props.ActiveTarget}\n\n adatok betöltése ...` : infos = this.state.itemAlert
+        // }
+        // if (this.props.item_to_load === 'new-data') {
+        //     this.state.itemAlert === "" ? infos = `${this.props.ActiveGroup}: -${this.props.ActiveTarget}\n\n új adat mentése ...` : infos = this.state.itemAlert
+        // }
+        // if (this.props.item_to_load === 'empty-input') {
+        //     this.state.itemAlert === "" ? infos = 'Üres beviteli mező ! ...' : infos = this.state.itemAlert
+        // }
+
+        if (this.state.itemAlert === "") {
+            switch (this.props.item_to_load) {
+                case 'group':
+                    infos = '\nCsoport lista betöltése ...';
+                    break;
+                case 'new-grp':
+                    infos = '\nÚj csoport mentése ...';
+                    break;
+                case 'edit-grp':
+                    infos = '\nCsoport módosítva ...';
+                    break;
+                case 'del-grp':
+                    infos = '\nCsoport törölve ...';
+                    break;
+
+                case 'target':
+                    infos = `${this.props.ActiveGroup}\n\n célok betöltése ...`;
+                    break;
+                case 'new-trg':
+                    infos = `${this.props.ActiveGroup}\n\n új cél mentése ...`;
+                    break;
+                case 'edit-trg':
+                    infos = `${this.props.ActiveGroup}\n\n cél módosítása ...`;
+                    break;
+                case 'del-trg':
+                    infos = `${this.props.ActiveGroup}\n\n cél törlése ...`;
+                    break;
+
+                case 'data':
+                    infos = `${this.props.ActiveGroup}: -${this.props.ActiveTarget}\n\n adatok betöltése ...`;
+                    break;
+                case 'new-data':
+                    infos = `${this.props.ActiveGroup}: -${this.props.ActiveTarget}\n\n új adat mentése ...`;
+                    break;
+
+                case 'descrpt':
+                    infos=`${this.props.ActiveGroup}: -${this.props.ActiveTarget}\n\n új leírás mentése ...`;
+                    break;
+
+                default:
+                    break;
+            }
+            return infos;
         }
-        if (this.props.item_to_load === 'new-data') {
-            this.state.itemAlert === "" ? infos = `${this.props.ActiveGroup}: -${this.props.ActiveTarget}\n\n új adat mentése ...` : infos = this.state.itemAlert
-        }
-        if (this.props.item_to_load === 'empty-input') {
-            this.state.itemAlert === "" ? infos = 'Üres beviteli mező ! ...' : infos = this.state.itemAlert
-        }
-        return infos;
     }
 
     downloadList() {
-        if (this.props.item_to_load === 'group' || this.props.item_to_load === 'new-group' || this.props.item_to_load === 'del-grp' || this.props.item_to_load === 'edit-grp') {
+        if (this.props.item_to_load === 'group' || this.props.item_to_load === 'new-grp' || this.props.item_to_load === 'del-grp' || this.props.item_to_load === 'edit-grp') {
             this.stateDispatcher('GROUP_LIST-INIT', this.state.GroupsData)
         }
 
-        if (this.props.item_to_load === 'target' || this.props.item_to_load === 'new-target' || this.props.item_to_load === 'del-target' || this.props.item_to_load === 'edit-target') {
+        if (this.props.item_to_load === 'target' || this.props.item_to_load === 'new-trg' || this.props.item_to_load === 'del-trg' || this.props.item_to_load === 'edit-trg') {
             this.stateDispatcher('TARGET_LIST-INIT', this.state.CurrentGroupTargets)
         }
 
         if (this.props.item_to_load === 'data' || this.props.item_to_load === 'new-data') {
             this.stateDispatcher('DATA_LIST-INIT', this.state.CurrentTargetData)
+        }
+        if(this.props.item_to_load === 'target'){
+            this.stateDispatcher('descrpt-init', this.state.CurrentGroupDescriptions)
         }
         if (this.props.item_to_load === 'g-avs') {
             this.stateDispatcher('G_AVS_INIT', this.state.Gavs)
@@ -98,7 +145,7 @@ class ItemLoader extends Component {
             .then(data => {
                 let iAlert = "";
                 if (Object.entries(data[1]).length === 0) {
-                    iAlert = "Nincs letölthető csoport ...";
+                    //iAlert = "Nincs letölthető csoport ...";
                     this.stateDispatcher('popup', 'NewGroup');
                 } else {
                     iAlert = data[0];
@@ -126,8 +173,6 @@ class ItemLoader extends Component {
         fetch(serverURL + '/getDescriptionList')
             .then(response => response.json())
             .then(data => {
-                console.log('descrpt list: ', data);
-                this.stateDispatcher('descrptINIT', data)
                 this.setState({
                     CurrentGroupDescriptions: data
                 })
@@ -177,10 +222,10 @@ class ItemLoader extends Component {
 
 
     componentDidMount() {
-        if (this.props.item_to_load === 'group' || this.props.item_to_load === 'new-group' || this.props.item_to_load === 'del-grp' || this.props.item_to_load === 'edit-grp') {
+        if (this.props.item_to_load === 'group' || this.props.item_to_load === 'new-grp' || this.props.item_to_load === 'del-grp' || this.props.item_to_load === 'edit-grp') {
             this.getGroups();
         }
-        if (this.props.item_to_load === 'target' || this.props.item_to_load === 'new-target' || this.props.item_to_load === 'del-target' || this.props.item_to_load === 'edit-target') {
+        if (this.props.item_to_load === 'target' || this.props.item_to_load === 'new-trg' || this.props.item_to_load === 'del-trg' || this.props.item_to_load === 'edit-trg') {
             this.getTargets();
         }
         if (this.props.item_to_load === 'data' || this.props.item_to_load === 'new-data') {

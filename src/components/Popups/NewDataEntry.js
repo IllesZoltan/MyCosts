@@ -45,7 +45,7 @@ class NewDataEntry extends Component {
     // }
 
 
-    enableToSend(nr) {
+    enableToSend() {
         let filledFields = 0;
         for (let i = 1; i < 5; i++) {
             if (document.getElementById("newInput" + i).value !== "") {
@@ -101,7 +101,6 @@ class NewDataEntry extends Component {
 
     checkClicked(fieldNrCheck) {
         const enteredValues = Object.values(this.state);
-
         //-- mező ellenőrzése
         if (enteredValues.indexOf("") > -1) {  //-- ha van üres mező
             if ((enteredValues.indexOf("") + 1) !== fieldNrCheck) {  //-- ha nem az az üres mező, amelyikre rá lett kattintva
@@ -112,7 +111,7 @@ class NewDataEntry extends Component {
                 this.changeFieldProperty(false, i);
             }
         }
-        this.enableToSend(fieldNrCheck);
+        this.enableToSend();
     }
 
     // markAllEmpty() {
@@ -131,7 +130,6 @@ class NewDataEntry extends Component {
     // }
 
     validityCheck(fieldNrCheck) {
-
         if (!document.getElementById("newInput" + fieldNrCheck).disabled) {
             if (fieldNrCheck === 1) {
                 if (document.getElementById("newInput" + fieldNrCheck).value === "") {
@@ -144,31 +142,41 @@ class NewDataEntry extends Component {
                 }
             }
 
-            if (fieldNrCheck === 2) {
-                if (document.getElementById("newInput" + fieldNrCheck).value === "") {
-                    this.dispatchToState('show-time', "Select_Time");
-                } else {
-                    if (this.sendData) {
-                        this.dispatchToState('show-time', "Select_Time");
+            if (fieldNrCheck > 1) {
+                if (document.getElementById("newInput" + (fieldNrCheck - 1)).value !== "") {
+                    if (fieldNrCheck === 2) {
+                        if (document.getElementById("newInput" + fieldNrCheck).value === "") {
+                            this.dispatchToState('show-time', "Select_Time");
+                        } else {
+                            if (this.sendData) {
+                                this.dispatchToState('show-time', "Select_Time");
+                            }
+                            else { this.dispatchToState('show-time', "save_time"); }
+                        }
                     }
-                    else { this.dispatchToState('show-time', "save_time"); }
+
+
+                    if (fieldNrCheck === 3) {
+                        if (document.getElementById("newInput" + fieldNrCheck).value === "") {
+                            this.dispatchToState('descrpt-selection', "Select_Description");
+                        } else {
+                            if (this.sendData) {
+                                this.dispatchToState('descrpt-selection', "Select_Description");
+                            }
+                            else { this.dispatchToState('descrpt-selection', "save_descrpt"); }
+                        }
+                    }
+
+
+                    if (fieldNrCheck === 4) {
+                        this.dispatchToState('hideALLsel', "")
+                    }
+
                 }
             }
 
-            if (fieldNrCheck === 3) {
-                if (document.getElementById("newInput" + fieldNrCheck).value === "") {
-                    this.dispatchToState('show-descrpt', "Select_Description");
-                } else {
-                    if (this.sendData) {
-                        this.dispatchToState('show-descrpt', "Select_Description");
-                    }
-                    else { this.dispatchToState('show-descrpt', "save_descrpt"); }
-                }
-            }
 
-            if (fieldNrCheck === 4) {
-                this.dispatchToState('hideALLsel', "")
-            }
+
         }
 
         this.checkAll();
@@ -182,13 +190,20 @@ class NewDataEntry extends Component {
 
     // ON_BLURE
     updateState(e, type, nr) {
+        if (nr === 4) {
+            if (!isNaN(e.target.value)) {
+                this.newInput = e.target.value;
+            } else {
+                e.target.value = "";
+            }
+        }
         if (e.target.value) {
             this.newInput = e.target.value;
         } else {
             this.newInput = "";
         }
 
-        this.enableToSend(nr);
+        this.enableToSend();
 
         this.setState({
             ...this.state,
@@ -258,7 +273,7 @@ class NewDataEntry extends Component {
         this.dispatchToState('popup', "");
         this.dispatchToState('show-date', "clear_hide");
         this.dispatchToState('show-time', "clear_hide");
-        this.dispatchToState('show-descrpt', "clear_hide");
+        this.dispatchToState('descrpt-selection', "clear_hide");
     }
 
     dispatchToState(type, value) {
@@ -276,9 +291,16 @@ class NewDataEntry extends Component {
         return btn
     }
 
-    // componentDidMount(){
-    //     this.getDescList();
-    // }
+    componentDidMount(){
+        const stateUpdate={};
+        const stateKeys = Object.keys(this.state);
+        for (let index = 1; index < 5; index++) {
+            stateUpdate[stateKeys[index-1]]=document.getElementById('newInput'+index).value;
+        }
+        this.setState({
+            ...stateUpdate
+        })
+    }
 
     render() {
         return (
@@ -291,7 +313,7 @@ class NewDataEntry extends Component {
                     <Link to="/loaded_items"><input id="newInput1" name="newInput1" placeholder={this.inputs[0]} value={this.props.SelectedDate} onClick={() => { this.validityCheck(1) }} onChange={e => { this.handleInputChange(e) }} onBlur={e => { this.updateState(e, "date", 1) }} autoComplete="off" /></Link>
                     <Link to="/loaded_items"><input id="newInput2" name="newInput2" placeholder={this.inputs[1]} value={this.props.SelectedTime} onClick={() => { this.validityCheck(2) }} onChange={e => { this.handleInputChange(e) }} onBlur={e => { this.updateState(e, "time", 2) }} autoComplete="off" /></Link>
                     <Link to="/loaded_items"><input id="newInput3" name="newInput3" placeholder={this.inputs[2]} value={this.props.SelectedDescription} onClick={() => { this.validityCheck(3) }} onChange={e => { this.handleInputChange(e) }} onBlur={e => { this.updateState(e, "description", 3) }} autoComplete="off" /></Link>
-                    <input id="newInput4" name="newInput4" placeholder={this.inputs[3]} onClick={e => { this.validityCheck(4) }} onChange={e => { this.handleInputChange(e) }} onBlur={e => { this.updateState(e, "price", 4) }} autoComplete="off" />
+                    <Link to="/loaded_items"><input id="newInput4" name="newInput4" placeholder={this.inputs[3]} onClick={e => { this.validityCheck(4) }} onChange={e => { this.handleInputChange(e) }} onBlur={e => { this.updateState(e, "price", 4) }} autoComplete="off" /></Link>
                 </div>
                 <div className="btn-ribbon" onClick={() => this.hideInnerPopups()}>
                     {this.createBtn()}

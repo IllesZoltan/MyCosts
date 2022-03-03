@@ -18,7 +18,7 @@ const serverURL = 'http://localhost:3030';
 
 class Item {
   getItem(value) {
-    const currentDate = Date.now()
+    const currentDate = Date.now();
     const newItem = {
       [currentDate]: value
     }
@@ -40,7 +40,8 @@ const initialState = {
   SelectedTime: "",
   DescriptionSelectionWindow: "",
   SelectedDescription: "",
-  descPopupWin: "",
+  //descPopupWin: "",
+  editDescPopupWin: false,
   ActiveGroup: "",
   ActiveTarget: "",
   item_to_load: "group",
@@ -249,7 +250,6 @@ function reducer(state = initialState, action) {
         item_to_load: "del-trg",
         alertState: []
       }
-
       return delTargState
 
     case "SEL-TRG":
@@ -421,7 +421,7 @@ function reducer(state = initialState, action) {
 
 
 
-    case 'show-descrpt':
+    case 'descrpt-selection':
       let descrptDisplayState = {};
 
       if (action.value === "clear_hide") {
@@ -439,7 +439,6 @@ function reducer(state = initialState, action) {
           TimeSelectionWindow: "",
         }
       }
-
       if (action.value === "save_descrpt") {
         descrptDisplayState = {
           ...state,
@@ -455,12 +454,50 @@ function reducer(state = initialState, action) {
       }
       return newDescriptionState
 
-    case 'descrptINIT':
+    case 'edit-descrpt':
+      const editDstate = {
+        ...state,
+        editDescPopupWin: true
+      }
+      return editDstate
+
+    case 'descrpt-init':
+      const descrptNames = action.value
       let descrptInitState = {
         ...state,
-        Descriptions: action.value
+        Descriptions: descrptNames
       }
-      return descrptInitState
+      return descrptInitState;
+
+    case 'add-descrpt':
+      const createDescrpt = new Item()
+      const newDescrpt = createDescrpt.getItem(action.value);
+      const desArr = state.Descriptions;
+      const descptToFetch = {};
+      const newDescObject = {};
+      newDescObject.Gid = desArr[0].Gid;
+      Object.entries(newDescrpt).forEach(([key, value]) => {
+        descptToFetch.dId = key;
+        newDescObject.DscptID = key;
+        descptToFetch.dName = value;
+        newDescObject.Dscpt = value;
+      })
+      const descrptFetchingOptions = {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(newDescrpt)
+      }
+      fetch(serverURL + '/addNewDescrpt', descrptFetchingOptions)
+        .catch(err => console.error('Description adding error: ', err));
+
+      desArr.push(newDescObject);
+      const newDescrptState = {
+        ...state,
+        Descriptions: desArr,
+        editDescPopupWin: false,
+        item_to_load: "descrpt"
+      }
+      return newDescrptState;
 
     case 'hideALLsel':
       const allSelHide = {
@@ -523,7 +560,8 @@ function reducer(state = initialState, action) {
 
       const newAlertState = {
         ...state,
-        alertState: newAlert
+        alertState: newAlert,
+        item_to_load: action.value.type
       }
       return newAlertState
 

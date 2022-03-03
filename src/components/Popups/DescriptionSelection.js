@@ -7,10 +7,10 @@ import EditDescription from './EditDescription';
 class DescriptionSelection extends Component {
     constructor() {
         super();
+        this.GroupDescriptions = [];
         this.state = {
             selDesc: false,
-            editDesc: false
-        }
+        };
     }
 
     descDispatcher(type, value) {
@@ -21,22 +21,32 @@ class DescriptionSelection extends Component {
         document.getElementById("newInput3").focus();
         document.getElementById("newInput3").select();
         this.descDispatcher('sel-descrpt', e.target.innerText)
-        this.descDispatcher('show-descrpt', "save_descrpt")
+        this.descDispatcher('descrpt-selection', "save_descrpt")
     }
 
-    editDescList() {
+    editDescList(nr) {
+        if (this.GroupDescriptions.length === 0 || nr === 1) {
+            this.descDispatcher('edit-descrpt', true);
+        }
         this.setState({
-            ...this.state,
-            editDesc: true
+            ...this.state
         })
     }
 
     descPopup() {
         let descWin;
-        if (this.state.editDesc) {
+        if (this.props.editDescPopupWin) {
             descWin = <EditDescription />
         }
         return descWin;
+    }
+
+    componentDidMount() {
+        this.props.Descriptions.forEach(element => {
+            this.GroupDescriptions.push(element.Dscpt);
+            console.log('desc sel mount ',element);
+        });
+        this.editDescList(0);
     }
 
     render() {
@@ -44,9 +54,10 @@ class DescriptionSelection extends Component {
             <div className="sel-desc sel-table">
                 {this.descPopup()}
                 <div className="desc-header">
-                    <Link to="/loaded_items"><div className="desc-headr-img" onClick={() => this.editDescList()}><img src="edit-bw.png" alt="edit" /></div></ Link>
+                    <div className='sel-desc-title'>Description</div>
+                    <Link to="/loaded_items"><div className="desc-headr-img" onClick={() => this.editDescList(1)}><img src="edit-bw.png" alt="edit" /></div></ Link>
                 </div>
-                {this.props.Descriptions.map((desc, idx) => {
+                {this.GroupDescriptions.map((desc, idx) => {
                     return (
                         <Link to="/loaded_items" key={idx}>
                             <div className="desc-item" onClick={(e) => { this.selectedDescrpt(e) }}>{desc}</div>

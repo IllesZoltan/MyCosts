@@ -8,9 +8,19 @@ class EditDescription extends Component {
         super();
         this.newCheck = false;
         this.newInput = "";
+        this.descptList = [];
         this.state = {
             newDesc: "",
         }
+    }
+
+    descrptEditDispatcher(type, value) {
+        this.props.dispatch({ type: type, value: value })
+    }
+
+    showDescAlert(key, item) {
+        const itemID = { type: "description", key: key, value: item }
+        this.descrptEditDispatcher('alert', itemID);
     }
 
     handleInputChange(e) {
@@ -24,27 +34,34 @@ class EditDescription extends Component {
     newCheckBtn() {
         let nCheck;
         if (this.newCheck) {
-            nCheck = <Link to='/loaded_items'><div className="desc-check" onClick={() => this.saveChanges()}><img src="check-bw.png" alt="check" /></div></Link>
+            nCheck = <Link to='/item_loader'><div className="desc-check" onClick={() => this.saveChanges()}><img src="check-bw.png" alt="check" /></div></Link>
         } else {
-            nCheck = <div className="desc-check" onClick={() => this.saveChanges()}><img src="check-inactive.png" alt="check" /></div>
+            nCheck = <div className="desc-check"><img src="check-inactive.png" alt="check" /></div>
         }
         return nCheck;
     }
 
     enableToSend() {
-        console.log('edit desc send ', this.newInput);
         if (this.newInput) {
             this.newCheck = true;
         } else {
             this.newCheck = false;
         }
         this.setState({
-            ...this.state
+            ...this.state,
+            newDesc: this.newInput
         })
     }
 
     saveChanges() {
-        console.log("edit desc changed ", this.newInput);
+        this.descrptEditDispatcher('add-descrpt', this.state.newDesc);
+        this.descrptEditDispatcher('descrpt-selection', "Select_Description");
+    }
+
+    componentDidMount() {
+        this.props.Descriptions.forEach(element => {
+            this.descptList.push(element.Dscpt);
+        });
     }
 
     render() {
@@ -61,9 +78,9 @@ class EditDescription extends Component {
                 {this.props.Descriptions.map((descs, idx) => {
                     return (
                         <div className="desc-row" key={idx}>
-                            <input defaultValue={descs} onChange={(e) => this.handleInputChange(e)} />
+                            <input defaultValue={descs.Dscpt} onChange={(e) => this.handleInputChange(e)} />
                             <div className="desc-check"><img src="check-bw.png" alt="check" /></div>
-                            <div className="desc-check"><img src="trash.png" alt="trash" /></div>
+                            <Link to='/alert'><div className="desc-check" onClick={() => this.showDescAlert(descs.DscptID, descs.Dscpt)}><img src="trash.png" alt="trash" /></div></Link>
                         </div>
                     )
                 })
